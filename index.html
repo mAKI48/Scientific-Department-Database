@@ -1,118 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>SCD Scientific Database</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 
   <style>
-    /* =========================================
-       CLICKABLE TEST REPORTS
-       ========================================= */
 
-    .test-card {
+    /* ==================================================
+       THEME SYSTEM
+       ================================================== */
+
+    :root {
+
+      --bg: #0b0d0f;
+      --panel: #111419;
+      --panel2: #15191e;
+
+      --text: #e7e7e7;
+      --muted: #999;
+
+      --border: #30343a;
+
+      --accent: #d9d9d9;
+
+      --input: #0d1013;
+
+    }
+
+
+    body.light-mode {
+
+      --bg: #f4f4f4;
+      --panel: #ffffff;
+      --panel2: #eeeeee;
+
+      --text: #171717;
+      --muted: #555;
+
+      --border: #c9c9c9;
+
+      --accent: #111;
+
+      --input: #ffffff;
+
+    }
+
+
+    body {
+
+      background: var(--bg);
+
+      color: var(--text);
+
+      transition:
+        background 0.2s ease,
+        color 0.2s ease;
+
+    }
+
+
+    /* ==================================================
+       THEME BUTTON
+       ================================================== */
+
+    .theme-switcher {
+
+      position: fixed;
+
+      top: 15px;
+
+      right: 15px;
+
+      z-index: 10000;
+
+      display: flex;
+
+      gap: 5px;
+
+    }
+
+
+    .theme-switcher button {
+
+      background: var(--panel);
+
+      color: var(--text);
+
+      border: 1px solid var(--border);
+
+      padding: 7px 10px;
+
+      font-size: 11px;
+
       cursor: pointer;
+
+    }
+
+
+    .theme-switcher button:hover {
+
+      border-color: var(--text);
+
+    }
+
+
+    /* ==================================================
+       TEST / INCIDENT CLICKING
+       ================================================== */
+
+    .test-card,
+    .incident-card {
+
+      cursor: pointer;
+
       transition:
         transform 0.15s ease,
-        border-color 0.15s ease,
-        background 0.15s ease;
+        border-color 0.15s ease;
+
     }
 
-    .test-card:hover {
+
+    .test-card:hover,
+    .incident-card:hover {
+
       transform: translateY(-2px);
-      border-color: #777;
-      background: rgba(255,255,255,0.02);
+
+      border-color: var(--text);
+
     }
+
 
     .click-hint {
-      margin-top: 16px;
+
+      margin-top: 14px;
+
       padding-top: 10px;
-      border-top: 1px solid #333;
-      font-size: 11px;
+
+      border-top: 1px solid var(--border);
+
+      font-size: 10px;
+
       letter-spacing: 1px;
-      opacity: 0.6;
+
+      color: var(--muted);
+
     }
 
 
-    /* =========================================
-       FULL TEST REPORT MODAL
-       ========================================= */
+    /* ==================================================
+       FULL REPORT OVERLAY
+       ================================================== */
 
-    .modal {
+    .report-overlay {
+
       position: fixed;
-      inset: 0;
-      z-index: 9999;
 
-      background: rgba(0,0,0,0.82);
+      inset: 0;
+
+      z-index: 9000;
+
+      display: none;
 
       overflow-y: auto;
 
-      padding: 40px 20px;
+      padding: 35px 20px;
+
+      box-sizing: border-box;
+
+      background: var(--bg);
+
     }
 
-    .modal.hidden {
-      display: none;
+
+    .report-overlay.open {
+
+      display: block;
+
     }
 
-    .modal-content {
-      position: relative;
 
-      width: min(900px, 100%);
+    .report-page {
+
+      width: min(950px, 100%);
 
       margin: 0 auto;
 
-      background: #11161c;
+      background: var(--bg);
 
-      border: 1px solid #444;
+      color: var(--text);
+
+      border: 1px solid var(--border);
 
       padding: 35px;
 
       box-sizing: border-box;
 
-      box-shadow:
-        0 20px 60px rgba(0,0,0,0.65);
     }
 
-    .modal-close {
-      position: absolute;
 
-      top: 8px;
-      right: 14px;
+    .report-close {
 
-      background: transparent;
+      position: fixed;
 
-      border: none;
+      top: 15px;
 
-      color: #aaa;
+      right: 20px;
 
-      font-size: 32px;
+      z-index: 9100;
 
-      line-height: 1;
+      width: 40px;
+
+      height: 40px;
+
+      background: var(--bg);
+
+      color: var(--text);
+
+      border: 1px solid var(--border);
+
+      font-size: 25px;
 
       cursor: pointer;
-    }
 
-    .modal-close:hover {
-      color: white;
-    }
-
-    .modal-open {
-      overflow: hidden;
     }
 
 
-    /* =========================================
-       FULL REPORT
-       ========================================= */
+    .report-close:hover {
 
-    .full-report {
-      width: 100%;
+      border-color: var(--text);
+
     }
+
 
     .report-header {
+
       display: flex;
 
       justify-content: space-between;
@@ -123,14 +257,20 @@
 
       padding-bottom: 20px;
 
-      border-bottom: 1px solid #444;
+      border-bottom: 1px solid var(--border);
+
     }
+
 
     .report-header h2 {
-      margin: 6px 0 0;
+
+      margin: 5px 0 0;
+
     }
 
+
     .report-meta {
+
       display: flex;
 
       flex-wrap: wrap;
@@ -139,50 +279,67 @@
 
       padding: 15px 0;
 
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid var(--border);
 
       font-size: 13px;
+
+      color: var(--muted);
+
     }
+
 
     .report-section {
+
       margin-top: 28px;
+
     }
 
+
     .report-section h3 {
+
       margin: 0 0 10px;
 
-      font-size: 13px;
+      font-size: 12px;
 
       letter-spacing: 1.5px;
 
-      color: #aaa;
+      color: var(--muted);
+
     }
 
+
     .report-section p {
+
       margin: 0;
+
+      line-height: 1.75;
+
+      white-space: pre-wrap;
+
+      color: var(--text);
+
+    }
+
+
+    .report-log {
+
+      padding: 16px;
+
+      background: var(--panel);
+
+      border: 1px solid var(--border);
 
       line-height: 1.7;
 
       white-space: pre-wrap;
+
+      color: var(--text);
+
     }
 
-    .report-log {
-      background: #080b0e;
-
-      border: 1px solid #333;
-
-      padding: 15px;
-
-      white-space: pre-wrap;
-
-      line-height: 1.6;
-
-      font-family: monospace;
-
-      overflow-x: auto;
-    }
 
     .report-footer {
+
       display: flex;
 
       flex-wrap: wrap;
@@ -193,44 +350,125 @@
 
       padding-top: 20px;
 
-      border-top: 1px solid #444;
+      border-top: 1px solid var(--border);
+
     }
 
 
-    /* =========================================
+    /* ==================================================
+       DOCUMENT LINKS
+       ================================================== */
+
+    .document-link {
+
+      display: inline-block;
+
+      margin-top: 12px;
+
+      padding: 9px 14px;
+
+      border: 1px solid var(--border);
+
+      color: var(--text);
+
+      text-decoration: none;
+
+      font-size: 11px;
+
+      letter-spacing: 1px;
+
+    }
+
+
+    .document-link:hover {
+
+      border-color: var(--text);
+
+    }
+
+
+    /* ==================================================
        MOBILE
-       ========================================= */
+       ================================================== */
 
     @media (max-width: 700px) {
 
-      .modal {
-        padding: 15px;
+      .theme-switcher {
+
+        position: static;
+
+        justify-content: flex-end;
+
+        padding: 10px;
+
       }
 
-      .modal-content {
-        padding: 25px 20px;
+
+      .report-overlay {
+
+        padding: 15px;
+
       }
+
+
+      .report-page {
+
+        padding: 25px 18px;
+
+      }
+
 
       .report-header {
+
         flex-direction: column;
+
       }
 
+
       .report-meta {
+
         flex-direction: column;
+
         gap: 8px;
+
       }
 
     }
+
   </style>
+
 </head>
 
 
 <body>
 
 
-  <!-- =======================================
+  <!-- ==================================================
+       THEME BUTTONS
+       ================================================== -->
+
+  <div class="theme-switcher">
+
+    <button
+      id="dark-mode-button"
+      type="button"
+    >
+      ☾ BLACK
+    </button>
+
+    <button
+      id="light-mode-button"
+      type="button"
+    >
+      ☀ WHITE
+    </button>
+
+  </div>
+
+
+  <!-- ==================================================
        HEADER
-       ======================================= -->
+       ================================================== -->
 
   <header class="site-header">
 
@@ -265,82 +503,75 @@
   </header>
 
 
-  <!-- =======================================
+  <!-- ==================================================
        NAVIGATION
-       ======================================= -->
+       ================================================== -->
 
   <nav class="nav">
 
     <button
       class="nav-button active"
-      data-section="home">
-
+      data-section="home"
+    >
       HOME
-
     </button>
 
 
     <button
       class="nav-button"
-      data-section="scps">
-
+      data-section="scps"
+    >
       SCP FILES
-
     </button>
 
 
     <button
       class="nav-button"
-      data-section="tests">
-
+      data-section="tests"
+    >
       TEST REPORTS
-
     </button>
 
 
     <button
       class="nav-button"
-      data-section="incidents">
-
+      data-section="incidents"
+    >
       INCIDENTS
-
     </button>
 
 
     <button
       class="nav-button"
-      data-section="personnel">
-
+      data-section="personnel"
+    >
       PERSONNEL
-
     </button>
 
 
     <button
       class="nav-button"
-      data-section="documents">
-
+      data-section="documents"
+    >
       DOCUMENTS
-
     </button>
 
   </nav>
 
 
-  <!-- =======================================
+  <!-- ==================================================
        MAIN
-       ======================================= -->
+       ================================================== -->
 
   <main class="container">
 
 
-    <!-- =====================================
-         HOME
-         ===================================== -->
+    <!-- HOME -->
 
     <section
       id="home"
-      class="page active">
+      class="page active"
+    >
 
       <div class="page-title">
 
@@ -368,14 +599,12 @@
 
       <div
         class="stats"
-        id="stats">
-      </div>
+        id="stats"
+      ></div>
 
 
       <div class="grid-two">
 
-
-        <!-- RECENT TESTS -->
 
         <div class="panel">
 
@@ -383,13 +612,10 @@
             RECENT TEST REPORTS
           </div>
 
-          <div id="recent-tests">
-          </div>
+          <div id="recent-tests"></div>
 
         </div>
 
-
-        <!-- DATABASE STATUS -->
 
         <div class="panel">
 
@@ -468,13 +694,12 @@
     </section>
 
 
-    <!-- =====================================
-         SCP FILES
-         ===================================== -->
+    <!-- SCP FILES -->
 
     <section
       id="scps"
-      class="page">
+      class="page"
+    >
 
       <div class="page-title">
 
@@ -502,19 +727,18 @@
 
       <div
         id="scp-list"
-        class="record-list">
-      </div>
+        class="record-list"
+      ></div>
 
     </section>
 
 
-    <!-- =====================================
-         TEST REPORTS
-         ===================================== -->
+    <!-- TEST REPORTS -->
 
     <section
       id="tests"
-      class="page">
+      class="page"
+    >
 
       <div class="page-title">
 
@@ -542,19 +766,18 @@
 
       <div
         id="test-list"
-        class="record-list">
-      </div>
+        class="record-list"
+      ></div>
 
     </section>
 
 
-    <!-- =====================================
-         INCIDENTS
-         ===================================== -->
+    <!-- INCIDENTS -->
 
     <section
       id="incidents"
-      class="page">
+      class="page"
+    >
 
       <div class="page-title">
 
@@ -571,19 +794,18 @@
 
       <div
         id="incident-list"
-        class="record-list">
-      </div>
+        class="record-list"
+      ></div>
 
     </section>
 
 
-    <!-- =====================================
-         PERSONNEL
-         ===================================== -->
+    <!-- PERSONNEL -->
 
     <section
       id="personnel"
-      class="page">
+      class="page"
+    >
 
       <div class="page-title">
 
@@ -600,19 +822,18 @@
 
       <div
         id="personnel-list"
-        class="record-list">
-      </div>
+        class="record-list"
+      ></div>
 
     </section>
 
 
-    <!-- =====================================
-         DOCUMENTS
-         ===================================== -->
+    <!-- DOCUMENTS -->
 
     <section
       id="documents"
-      class="page">
+      class="page"
+    >
 
       <div class="page-title">
 
@@ -621,7 +842,7 @@
         </h2>
 
         <p>
-          General Scientific Department documentation.
+          Scientific Department reference documents.
         </p>
 
       </div>
@@ -629,57 +850,50 @@
 
       <div
         id="document-list"
-        class="record-list">
-      </div>
+        class="record-list"
+      ></div>
 
     </section>
 
 
-    <!-- ERROR -->
-
     <div
       id="error"
-      class="error hidden">
-    </div>
+      class="error hidden"
+    ></div>
+
 
   </main>
 
 
-  <!-- =======================================
-       FULL TEST REPORT WINDOW
-       ======================================= -->
+  <!-- ==================================================
+       FULL REPORT VIEW
+       ================================================== -->
 
   <div
-    id="test-modal"
-    class="modal hidden">
+    id="report-overlay"
+    class="report-overlay"
+  >
+
+    <button
+      id="report-close"
+      class="report-close"
+      type="button"
+    >
+      ×
+    </button>
 
 
-    <div class="modal-content">
-
-
-      <button
-        class="modal-close"
-        id="modal-close"
-        aria-label="Close test report">
-
-        ×
-
-      </button>
-
-
-      <div
-        id="full-test-report">
-      </div>
-
-
-    </div>
+    <div
+      id="report-content"
+      class="report-page"
+    ></div>
 
   </div>
 
 
-  <!-- =======================================
+  <!-- ==================================================
        FOOTER
-       ======================================= -->
+       ================================================== -->
 
   <footer>
 
@@ -687,29 +901,19 @@
     &mdash;
     FOUNDATION INTERNAL ARCHIVE
 
-    <span id="updated">
-    </span>
+    <span id="updated"></span>
 
   </footer>
 
 
-  <!-- =======================================
-       JAVASCRIPT
-       ======================================= -->
-
   <script>
 
 
-    /* ========================================
+    /* ==================================================
        DATABASE STATE
 
-       IMPORTANT:
-
-       There is NO research database anymore.
-
-       Research notes are stored inside
-       tests.json.
-       ======================================== */
+       NO research.json
+       ================================================== */
 
     const state = {
 
@@ -726,9 +930,9 @@
     };
 
 
-    /* ========================================
-       LOAD DATA
-       ======================================== */
+    /* ==================================================
+       LOAD JSON FILES
+       ================================================== */
 
     async function loadData() {
 
@@ -741,7 +945,7 @@
         await Promise.all(
 
           files.map(
-            async (file) => {
+            async file => {
 
               const response =
                 await fetch(
@@ -783,27 +987,28 @@
       catch (error) {
 
         const box =
-          document
-            .getElementById("error");
+          document.getElementById(
+            "error"
+          );
 
 
-        box.classList
-          .remove("hidden");
+        box.classList.remove(
+          "hidden"
+        );
 
 
         box.textContent =
           "DATABASE ERROR: " +
-          error.message +
-          " — If you opened index.html directly, use GitHub Pages or a local web server.";
+          error.message;
 
       }
 
     }
 
 
-    /* ========================================
-       ESCAPE HTML
-       ======================================== */
+    /* ==================================================
+       SECURITY
+       ================================================== */
 
     function escapeHTML(value) {
 
@@ -811,37 +1016,37 @@
         value ?? ""
       )
 
-      .replaceAll(
-        "&",
-        "&amp;"
-      )
+        .replaceAll(
+          "&",
+          "&amp;"
+        )
 
-      .replaceAll(
-        "<",
-        "&lt;"
-      )
+        .replaceAll(
+          "<",
+          "&lt;"
+        )
 
-      .replaceAll(
-        ">",
-        "&gt;"
-      )
+        .replaceAll(
+          ">",
+          "&gt;"
+        )
 
-      .replaceAll(
-        '"',
-        "&quot;"
-      )
+        .replaceAll(
+          '"',
+          "&quot;"
+        )
 
-      .replaceAll(
-        "'",
-        "&#039;"
-      );
+        .replaceAll(
+          "'",
+          "&#039;"
+        );
 
     }
 
 
-    /* ========================================
-       RENDER EVERYTHING
-       ======================================== */
+    /* ==================================================
+       RENDER ALL
+       ================================================== */
 
     function renderAll() {
 
@@ -862,9 +1067,9 @@
     }
 
 
-    /* ========================================
-       STATISTICS
-       ======================================== */
+    /* ==================================================
+       STATS
+       ================================================== */
 
     function renderStats() {
 
@@ -928,9 +1133,9 @@
     }
 
 
-    /* ========================================
-       RECENT TEST REPORTS
-       ======================================== */
+    /* ==================================================
+       RECENT TESTS
+       ================================================== */
 
     function renderRecent() {
 
@@ -941,7 +1146,9 @@
 
 
       document
-        .getElementById("recent-tests")
+        .getElementById(
+          "recent-tests"
+        )
         .innerHTML =
 
           tests.length
@@ -949,7 +1156,9 @@
           ?
 
           tests
-            .map(testCompact)
+            .map(
+              testCompact
+            )
             .join("")
 
           :
@@ -1019,9 +1228,9 @@
     }
 
 
-    /* ========================================
-       SCP SEARCH / DISPLAY
-       ======================================== */
+    /* ==================================================
+       SCP FILES
+       ================================================== */
 
     function renderSCPs(
       filter = ""
@@ -1053,7 +1262,9 @@
 
 
       document
-        .getElementById("scp-list")
+        .getElementById(
+          "scp-list"
+        )
         .innerHTML =
 
           records.length
@@ -1061,7 +1272,9 @@
           ?
 
           records
-            .map(scpCard)
+            .map(
+              scpCard
+            )
             .join("")
 
           :
@@ -1152,9 +1365,9 @@
     }
 
 
-    /* ========================================
-       TEST SEARCH / DISPLAY
-       ======================================== */
+    /* ==================================================
+       TEST REPORTS
+       ================================================== */
 
     function renderTests(
       filter = ""
@@ -1196,7 +1409,9 @@
 
 
       document
-        .getElementById("test-list")
+        .getElementById(
+          "test-list"
+        )
         .innerHTML =
 
           records.length
@@ -1221,15 +1436,6 @@
 
     }
 
-
-    /* ========================================
-       TEST CARD
-
-       This is only the preview.
-
-       Click it to open the complete
-       report.
-       ======================================== */
 
     function testCard(
       t,
@@ -1322,9 +1528,9 @@
     }
 
 
-    /* ========================================
-       OPEN FULL TEST REPORT
-       ======================================== */
+    /* ==================================================
+       OPEN TEST REPORT
+       ================================================== */
 
     function openTest(index) {
 
@@ -1332,336 +1538,255 @@
         state.tests[index];
 
 
-      if (!t) {
-
-        return;
-
-      }
+      if (!t) return;
 
 
       document
         .getElementById(
-          "full-test-report"
+          "report-content"
         )
         .innerHTML = `
 
-
-          <div class="full-report">
-
-
-            <!-- HEADER -->
-
-            <div class="report-header">
+          <div class="report-header">
 
 
-              <div>
+            <div>
 
-                <div class="classification">
-
-                  SCIENTIFIC DEPARTMENT
-
-                </div>
-
-
-                <h2>
-
-                  ${escapeHTML(
-                    t.test_number
-                  )}
-
-                  —
-
-                  ${escapeHTML(
-                    t.scp
-                  )}
-
-                </h2>
-
+              <div class="classification">
+                SCIENTIFIC DEPARTMENT
               </div>
 
 
-              <span class="tag">
+              <h2>
 
                 ${escapeHTML(
-                  t.outcome
+                  t.test_number
                 )}
 
-              </span>
+                —
 
+                ${escapeHTML(
+                  t.scp
+                )}
+
+              </h2>
 
             </div>
 
 
-            <!-- META -->
+            <span class="tag">
 
-            <div class="report-meta">
+              ${escapeHTML(
+                t.outcome
+              )}
 
-
-              <span>
-
-                <strong>
-                  Date:
-                </strong>
-
-                ${escapeHTML(
-                  t.date
-                )}
-
-              </span>
+            </span>
 
 
-              <span>
-
-                <strong>
-                  Scientist:
-                </strong>
-
-                ${escapeHTML(
-                  t.scientist
-                )}
-
-              </span>
+          </div>
 
 
-              <span>
+          <div class="report-meta">
 
-                <strong>
-                  Clearance:
-                </strong>
+            <span>
 
-                ${escapeHTML(
-                  t.clearance
-                )}
+              <strong>
+                Date:
+              </strong>
 
-              </span>
+              ${escapeHTML(
+                t.date
+              )}
 
-
-            </div>
-
-
-            <!-- QUESTION -->
-
-            <div class="report-section">
-
-              <h3>
-                QUESTION
-              </h3>
+            </span>
 
 
-              <p>
+            <span>
 
-                ${escapeHTML(
-                  t.question
-                )}
+              <strong>
+                Scientist:
+              </strong>
 
-              </p>
+              ${escapeHTML(
+                t.scientist
+              )}
 
-            </div>
-
-
-            <!-- HYPOTHESIS -->
-
-            <div class="report-section">
-
-              <h3>
-                HYPOTHESIS
-              </h3>
+            </span>
 
 
-              <p>
+            <span>
 
-                ${escapeHTML(
-                  t.hypothesis
-                )}
+              <strong>
+                Clearance:
+              </strong>
 
-              </p>
+              ${escapeHTML(
+                t.clearance
+              )}
 
-            </div>
+            </span>
 
-
-            <!-- TEST LOG -->
-
-            <div class="report-section">
-
-              <h3>
-                TEST LOG
-              </h3>
+          </div>
 
 
-              <div class="report-log">
+          <div class="report-section">
 
-                ${escapeHTML(
-                  t.log
-                )}
+            <h3>
+              QUESTION
+            </h3>
 
-              </div>
+            <p>
+              ${escapeHTML(
+                t.question
+              )}
+            </p>
+
+          </div>
+
+
+          <div class="report-section">
+
+            <h3>
+              HYPOTHESIS
+            </h3>
+
+            <p>
+              ${escapeHTML(
+                t.hypothesis
+              )}
+            </p>
+
+          </div>
+
+
+          <div class="report-section">
+
+            <h3>
+              TEST LOG
+            </h3>
+
+            <div class="report-log">
+
+              ${escapeHTML(
+                t.log
+              )}
 
             </div>
 
-
-            <!-- RESULTS -->
-
-            <div class="report-section">
-
-              <h3>
-                RESULTS
-              </h3>
+          </div>
 
 
-              <p>
+          <div class="report-section">
 
-                ${escapeHTML(
-                  t.results
-                )}
+            <h3>
+              RESULTS
+            </h3>
 
-              </p>
+            <p>
+              ${escapeHTML(
+                t.results
+              )}
+            </p>
 
-            </div>
-
-
-            <!-- RESEARCH NOTES -->
-
-            <div class="report-section">
-
-              <h3>
-                RESEARCH NOTES
-              </h3>
+          </div>
 
 
-              <p>
+          <div class="report-section">
 
-                ${escapeHTML(
-                  t.research_notes ||
-                  "No research notes attached."
-                )}
+            <h3>
+              RESEARCH NOTES
+            </h3>
 
-              </p>
+            <p>
 
-            </div>
+              ${escapeHTML(
+                t.research_notes ||
+                "No research notes attached."
+              )}
 
+            </p>
 
-            <!-- CONCLUSION -->
-
-            <div class="report-section">
-
-              <h3>
-                CONCLUSION
-              </h3>
+          </div>
 
 
-              <p>
+          <div class="report-section">
 
-                ${escapeHTML(
-                  t.conclusion ||
-                  "No conclusion recorded."
-                )}
+            <h3>
+              CONCLUSION
+            </h3>
 
-              </p>
+            <p>
 
-            </div>
+              ${escapeHTML(
+                t.conclusion ||
+                "No conclusion recorded."
+              )}
 
+            </p>
 
-            <!-- SCIENTIST NOTE -->
-
-            <div class="report-section">
-
-              <h3>
-                SCIENTIST NOTE
-              </h3>
+          </div>
 
 
-              <p>
+          <div class="report-section">
 
-                "${escapeHTML(
-                  t.scientist_note ||
-                  "No scientist note recorded."
-                )}"
+            <h3>
+              SCIENTIST NOTE
+            </h3>
 
-              </p>
+            <p>
 
-            </div>
+              ${escapeHTML(
+                t.scientist_note ||
+                "No scientist note recorded."
+              )}
 
+            </p>
 
-            <!-- FOOTER -->
-
-            <div class="report-footer">
-
-
-              <span>
-
-                <strong>
-                  Casualties:
-                </strong>
-
-                ${escapeHTML(
-                  t.casualties ||
-                  "None recorded"
-                )}
-
-              </span>
+          </div>
 
 
-              <span>
+          <div class="report-footer">
 
-                <strong>
-                  Follow-up:
-                </strong>
+            <span>
 
-                ${escapeHTML(
-                  t.follow_up ||
-                  "None recorded"
-                )}
+              <strong>
+                Casualties:
+              </strong>
 
-              </span>
+              ${escapeHTML(
+                t.casualties ||
+                "None recorded"
+              )}
+
+            </span>
 
 
-            </div>
+            <span>
 
+              <strong>
+                Follow-up:
+              </strong>
+
+              ${escapeHTML(
+                t.follow_up ||
+                "None recorded"
+              )}
+
+            </span>
 
           </div>
 
         `;
 
 
-      document
-        .getElementById(
-          "test-modal"
-        )
-        .classList
-        .remove("hidden");
-
-
-      document.body
-        .classList
-        .add("modal-open");
+      openReport();
 
     }
 
 
-    /* ========================================
-       CLOSE TEST REPORT
-       ======================================== */
-
-    function closeTest() {
-
-      document
-        .getElementById(
-          "test-modal"
-        )
-        .classList
-        .add("hidden");
-
-
-      document.body
-        .classList
-        .remove("modal-open");
-
-    }
-
-
-    /* ========================================
+    /* ==================================================
        INCIDENTS
-       ======================================== */
+       ================================================== */
 
     function renderIncidents() {
 
@@ -1679,116 +1804,97 @@
             .slice()
             .reverse()
             .map(
-              i => `
+              (incident) => {
 
-                <article class="record">
+                const index =
+                  state.incidents.indexOf(
+                    incident
+                  );
 
 
-                  <div class="record-head">
+                return `
 
-                    <h3>
+                  <article
+                    class="record incident-card"
+                    onclick="openIncident(${index})"
+                  >
+
+
+                    <div class="record-head">
+
+                      <h3>
+
+                        ${escapeHTML(
+                          incident.id
+                        )}
+
+                        —
+
+                        ${escapeHTML(
+                          incident.title
+                        )}
+
+                      </h3>
+
+
+                      <span class="tag">
+
+                        ${escapeHTML(
+                          incident.status
+                        )}
+
+                      </span>
+
+                    </div>
+
+
+                    <div class="meta">
 
                       ${escapeHTML(
-                        i.id
+                        incident.date
                       )}
 
-                      —
+                      |
 
                       ${escapeHTML(
-                        i.title
+                        incident.location
                       )}
 
-                    </h3>
+                      |
+
+                      SCP:
+                      ${escapeHTML(
+                        incident.scp
+                      )}
+
+                    </div>
 
 
-                    <span class="tag">
+                    <p>
+
+                      <strong>
+                        Summary:
+                      </strong>
 
                       ${escapeHTML(
-                        i.status
+                        incident.summary
                       )}
 
-                    </span>
-
-                  </div>
+                    </p>
 
 
-                  <div class="meta">
+                    <div class="click-hint">
 
-                    ${escapeHTML(
-                      i.date
-                    )}
+                      CLICK TO VIEW FULL INCIDENT REPORT
 
-                    |
-
-                    ${escapeHTML(
-                      i.location
-                    )}
-
-                    |
-
-                    SCP:
-                    ${escapeHTML(
-                      i.scp
-                    )}
-
-                  </div>
+                    </div>
 
 
-                  <p>
+                  </article>
 
-                    <strong>
-                      Summary:
-                    </strong>
+                `;
 
-                    ${escapeHTML(
-                      i.summary
-                    )}
-
-                  </p>
-
-
-                  <p>
-
-                    <strong>
-                      Personnel:
-                    </strong>
-
-                    ${escapeHTML(
-                      i.personnel
-                    )}
-
-                  </p>
-
-
-                  <p>
-
-                    <strong>
-                      Casualties:
-                    </strong>
-
-                    ${escapeHTML(
-                      i.casualties
-                    )}
-
-                  </p>
-
-
-                  <p>
-
-                    <strong>
-                      Resolution:
-                    </strong>
-
-                    ${escapeHTML(
-                      i.resolution
-                    )}
-
-                  </p>
-
-
-                </article>
-
-              `
+              }
             )
             .join("")
 
@@ -1801,9 +1907,222 @@
     }
 
 
-    /* ========================================
+    /* ==================================================
+       OPEN INCIDENT
+       ================================================== */
+
+    function openIncident(index) {
+
+      const i =
+        state.incidents[index];
+
+
+      if (!i) return;
+
+
+      document
+        .getElementById(
+          "report-content"
+        )
+        .innerHTML = `
+
+          <div class="report-header">
+
+
+            <div>
+
+              <div class="classification">
+                SCIENTIFIC DEPARTMENT
+              </div>
+
+
+              <h2>
+
+                ${escapeHTML(
+                  i.id
+                )}
+
+                —
+
+                ${escapeHTML(
+                  i.title
+                )}
+
+              </h2>
+
+            </div>
+
+
+            <span class="tag">
+
+              ${escapeHTML(
+                i.status
+              )}
+
+            </span>
+
+
+          </div>
+
+
+          <div class="report-meta">
+
+            <span>
+
+              <strong>
+                Date:
+              </strong>
+
+              ${escapeHTML(
+                i.date
+              )}
+
+            </span>
+
+
+            <span>
+
+              <strong>
+                Location:
+              </strong>
+
+              ${escapeHTML(
+                i.location
+              )}
+
+            </span>
+
+
+            <span>
+
+              <strong>
+                SCP:
+              </strong>
+
+              ${escapeHTML(
+                i.scp
+              )}
+
+            </span>
+
+          </div>
+
+
+          <div class="report-section">
+
+            <h3>
+              SUMMARY
+            </h3>
+
+            <p>
+
+              ${escapeHTML(
+                i.summary
+              )}
+
+            </p>
+
+          </div>
+
+
+          <div class="report-section">
+
+            <h3>
+              PERSONNEL INVOLVED
+            </h3>
+
+            <p>
+
+              ${escapeHTML(
+                i.personnel
+              )}
+
+            </p>
+
+          </div>
+
+
+          <div class="report-section">
+
+            <h3>
+              CASUALTIES
+            </h3>
+
+            <p>
+
+              ${escapeHTML(
+                i.casualties
+              )}
+
+            </p>
+
+          </div>
+
+
+          <div class="report-section">
+
+            <h3>
+              RESOLUTION
+            </h3>
+
+            <p>
+
+              ${escapeHTML(
+                i.resolution
+              )}
+
+            </p>
+
+          </div>
+
+
+        `;
+
+
+      openReport();
+
+    }
+
+
+    /* ==================================================
+       OPEN/CLOSE REPORT
+       ================================================== */
+
+    function openReport() {
+
+      document
+        .getElementById(
+          "report-overlay"
+        )
+        .classList
+        .add("open");
+
+
+      document.body.style.overflow =
+        "hidden";
+
+    }
+
+
+    function closeReport() {
+
+      document
+        .getElementById(
+          "report-overlay"
+        )
+        .classList
+        .remove("open");
+
+
+      document.body.style.overflow =
+        "";
+
+    }
+
+
+    /* ==================================================
        PERSONNEL
-       ======================================== */
+       ================================================== */
 
     function renderPersonnel() {
 
@@ -1828,7 +2147,6 @@
 
                   <div class="record-head">
 
-
                     <h3>
 
                       ${escapeHTML(
@@ -1846,7 +2164,6 @@
                       )}
 
                     </span>
-
 
                   </div>
 
@@ -1903,9 +2220,9 @@
     }
 
 
-    /* ========================================
+    /* ==================================================
        DOCUMENTS
-       ======================================== */
+       ================================================== */
 
     function renderDocuments() {
 
@@ -1927,7 +2244,6 @@
 
 
                   <div class="record-head">
-
 
                     <h3>
 
@@ -1951,7 +2267,6 @@
                       )}
 
                     </span>
-
 
                   </div>
 
@@ -1984,6 +2299,33 @@
                   </p>
 
 
+                  ${
+                    d.url
+
+                    ?
+
+                    `
+
+                      <a
+                        class="document-link"
+                        href="${escapeHTML(d.url)}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+
+                        OPEN DOCUMENT ↗
+
+                      </a>
+
+                    `
+
+                    :
+
+                    ""
+
+                  }
+
+
                 </article>
 
               `
@@ -1999,11 +2341,13 @@
     }
 
 
-    /* ========================================
-       EMPTY MESSAGE
-       ======================================== */
+    /* ==================================================
+       EMPTY
+       ================================================== */
 
-    function empty(message) {
+    function empty(
+      message
+    ) {
 
       return `
 
@@ -2020,9 +2364,9 @@
     }
 
 
-    /* ========================================
+    /* ==================================================
        NAVIGATION
-       ======================================== */
+       ================================================== */
 
     document
       .querySelectorAll(
@@ -2075,8 +2419,11 @@
 
 
               window.scrollTo({
+
                 top: 0,
+
                 behavior: "smooth"
+
               });
 
 
@@ -2087,9 +2434,9 @@
       );
 
 
-    /* ========================================
-       SCP SEARCH
-       ======================================== */
+    /* ==================================================
+       SEARCH
+       ================================================== */
 
     document
       .getElementById(
@@ -2104,10 +2451,6 @@
       );
 
 
-    /* ========================================
-       TEST SEARCH
-       ======================================== */
-
     document
       .getElementById(
         "test-search"
@@ -2121,78 +2464,34 @@
       );
 
 
-    /* ========================================
-       CLOSE BUTTON
-       ======================================== */
+    /* ==================================================
+       REPORT CLOSE
+       ================================================== */
 
     document
       .getElementById(
-        "modal-close"
+        "report-close"
       )
       .addEventListener(
         "click",
-        closeTest
+        closeReport
       );
 
 
-    /* ========================================
-       CLICK OUTSIDE REPORT TO CLOSE
-       ======================================== */
-
-    document
-      .getElementById(
-        "test-modal"
-      )
-      .addEventListener(
-        "click",
-        event => {
-
-
-          if (
-            event.target.id ===
-            "test-modal"
-          ) {
-
-            closeTest();
-
-          }
-
-
-        }
-      );
-
-
-    /* ========================================
-       ESC KEY
-       ======================================== */
+    /* ==================================================
+       ESC CLOSE
+       ================================================== */
 
     document.addEventListener(
       "keydown",
       event => {
-
 
         if (
           event.key ===
           "Escape"
         ) {
 
-
-          const modal =
-            document.getElementById(
-              "test-modal"
-            );
-
-
-          if (
-            !modal.classList.contains(
-              "hidden"
-            )
-          ) {
-
-            closeTest();
-
-          }
-
+          closeReport();
 
         }
 
@@ -2200,13 +2499,113 @@
     );
 
 
-    /* ========================================
-       START DATABASE
-       ======================================== */
+    /* ==================================================
+       DARK / LIGHT MODE
+       ================================================== */
+
+    function setTheme(
+      theme
+    ) {
+
+      if (
+        theme ===
+        "light"
+      ) {
+
+        document.body
+          .classList
+          .add("light-mode");
+
+
+        localStorage.setItem(
+          "scd-theme",
+          "light"
+        );
+
+      }
+
+      else {
+
+        document.body
+          .classList
+          .remove("light-mode");
+
+
+        localStorage.setItem(
+          "scd-theme",
+          "dark"
+        );
+
+      }
+
+    }
+
+
+    document
+      .getElementById(
+        "dark-mode-button"
+      )
+      .addEventListener(
+        "click",
+        () =>
+          setTheme(
+            "dark"
+          )
+      );
+
+
+    document
+      .getElementById(
+        "light-mode-button"
+      )
+      .addEventListener(
+        "click",
+        () =>
+          setTheme(
+            "light"
+          )
+      );
+
+
+    /* ==================================================
+       LOAD SAVED THEME
+       ================================================== */
+
+    const savedTheme =
+      localStorage.getItem(
+        "scd-theme"
+      );
+
+
+    if (
+      savedTheme ===
+      "light"
+    ) {
+
+      setTheme(
+        "light"
+      );
+
+    }
+
+    else {
+
+      setTheme(
+        "dark"
+      );
+
+    }
+
+
+    /* ==================================================
+       START
+       ================================================== */
 
     loadData();
 
   </script>
 
+
 </body>
+
 </html>
