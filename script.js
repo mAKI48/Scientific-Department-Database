@@ -12,8 +12,7 @@ const SUPABASE_URL =
   "https://hytqegmmwlvnyeraytec.supabase.co";
 
 const SUPABASE_KEY =
-  "YOUR_PUBLISHABLE_KEY_HERE";
-
+  "sb_publishable_PjiITaK5ILnagliukxereA_9fhwO-jO";
 
 const supabaseClient =
   window.supabase.createClient(
@@ -29,22 +28,19 @@ const supabaseClient =
 const ADMIN_UID =
   "1da022eb-e2cc-47a7-bf2a-a1762c638467";
 
-
 let currentUser = null;
 
 
+/* ==================================================
+   DATABASE STATE
+   ================================================== */
+
 let state = {
-
   scps: [],
-
   tests: [],
-
   incidents: [],
-
   personnel: [],
-
   documents: []
-
 };
 
 
@@ -85,25 +81,20 @@ function escapeHTML(value) {
 
 
 /* ==================================================
-   ERROR
+   ERROR HANDLING
    ================================================== */
 
 function showError(message) {
 
   const box =
-    document.getElementById(
-      "error"
-    );
+    document.getElementById("error");
 
   if (!box) return;
 
-  box.classList.remove(
-    "hidden"
-  );
+  box.classList.remove("hidden");
 
   box.textContent =
-    "DATABASE ERROR: " +
-    message;
+    "DATABASE ERROR: " + message;
 
 }
 
@@ -111,15 +102,11 @@ function showError(message) {
 function clearError() {
 
   const box =
-    document.getElementById(
-      "error"
-    );
+    document.getElementById("error");
 
   if (!box) return;
 
-  box.classList.add(
-    "hidden"
-  );
+  box.classList.add("hidden");
 
   box.textContent = "";
 
@@ -197,14 +184,11 @@ async function loadData() {
     state.scps =
       scps.data || [];
 
-
     state.tests =
       tests.data || [];
 
-
     state.incidents =
       incidents.data || [];
-
 
     state.personnel =
       personnel.data || [];
@@ -216,16 +200,13 @@ async function loadData() {
 
 
     const updated =
-      document.getElementById(
-        "updated"
-      );
+      document.getElementById("updated");
 
     if (updated) {
 
       updated.textContent =
         " | DATABASE LOADED: " +
-        new Date()
-          .toLocaleString();
+        new Date().toLocaleString();
 
     }
 
@@ -236,7 +217,8 @@ async function loadData() {
     console.error(error);
 
     showError(
-      error.message
+      error.message ||
+      "Unknown database error."
     );
 
   }
@@ -274,9 +256,7 @@ function renderAll() {
 function renderStats() {
 
   const box =
-    document.getElementById(
-      "stats"
-    );
+    document.getElementById("stats");
 
   if (!box) return;
 
@@ -360,20 +340,15 @@ function renderRecent() {
 
 
   box.innerHTML =
-
     tests.length
 
-      ?
+      ? tests
+          .map(testCompact)
+          .join("")
 
-      tests
-        .map(testCompact)
-        .join("")
-
-      :
-
-      empty(
-        "No test reports filed."
-      );
+      : empty(
+          "No test reports filed."
+        );
 
 }
 
@@ -477,20 +452,15 @@ function renderSCPs(
 
 
   box.innerHTML =
-
     records.length
 
-      ?
+      ? records
+          .map(scpCard)
+          .join("")
 
-      records
-        .map(scpCard)
-        .join("")
-
-      :
-
-      empty(
-        "No SCP files found."
-      );
+      : empty(
+          "No SCP files found."
+        );
 
 }
 
@@ -504,7 +474,7 @@ function scpCard(s) {
   return `
 
     <article
-      class="record test-card"
+      class="record scp-card"
       onclick="openSCP(${index})"
     >
 
@@ -562,13 +532,9 @@ function scpCard(s) {
       </p>
 
 
-      <div class="record-foot">
+      <div class="click-hint">
 
-        Clearance:
-        Level
-        ${escapeHTML(
-          s.clearance
-        )}
+        CLICK TO VIEW FULL SCP FILE
 
       </div>
 
@@ -587,7 +553,6 @@ function openSCP(index) {
 
   const s =
     state.scps[index];
-
 
   if (!s) return;
 
@@ -694,9 +659,9 @@ function openSCP(index) {
 
         FOUNDATION INTERNAL ARCHIVE
 
-        |
+        <br>
 
-        CLEARANCE
+        CLEARANCE LEVEL
         ${escapeHTML(
           s.clearance
         )}
@@ -760,26 +725,21 @@ function renderTests(
 
 
   box.innerHTML =
-
     records.length
 
-      ?
+      ? records
+          .map(
+            t =>
+              testCard(
+                t,
+                state.tests.indexOf(t)
+              )
+          )
+          .join("")
 
-      records
-        .map(
-          t =>
-            testCard(
-              t,
-              state.tests.indexOf(t)
-            )
-        )
-        .join("")
-
-      :
-
-      empty(
-        "No test reports found."
-      );
+      : empty(
+          "No test reports found."
+        );
 
 }
 
@@ -833,6 +793,7 @@ function testCard(
         |
 
         Scientist:
+
         ${escapeHTML(
           t.scientist
         )}
@@ -840,6 +801,7 @@ function testCard(
         |
 
         Clearance:
+
         ${escapeHTML(
           t.clearance
         )}
@@ -874,14 +836,13 @@ function testCard(
 
 
 /* ==================================================
-   OPEN TEST
+   OPEN TEST REPORT
    ================================================== */
 
 function openTest(index) {
 
   const t =
     state.tests[index];
-
 
   if (!t) return;
 
@@ -899,6 +860,7 @@ function openTest(index) {
           <div class="classification">
             SCIENTIFIC DEPARTMENT
           </div>
+
 
           <h2>
 
@@ -1055,6 +1017,10 @@ function openTest(index) {
 }
 
 
+/* ==================================================
+   REPORT SECTION
+   ================================================== */
+
 function reportSection(
   title,
   value
@@ -1069,11 +1035,7 @@ function reportSection(
       </h3>
 
       <p>
-
-        ${escapeHTML(
-          value
-        )}
-
+        ${escapeHTML(value)}
       </p>
 
     </div>
@@ -1166,6 +1128,7 @@ function renderIncidents() {
                   |
 
                   SCP:
+
                   ${escapeHTML(
                     incident.scp
                   )}
@@ -1218,7 +1181,6 @@ function openIncident(index) {
   const i =
     state.incidents[index];
 
-
   if (!i) return;
 
 
@@ -1235,6 +1197,7 @@ function openIncident(index) {
           <div class="classification">
             SCIENTIFIC DEPARTMENT
           </div>
+
 
           <h2>
 
@@ -1352,11 +1315,7 @@ function openReport() {
 
   if (!overlay) return;
 
-
-  overlay
-    .classList
-    .add("open");
-
+  overlay.classList.add("open");
 
   document.body.style.overflow =
     "hidden";
@@ -1373,11 +1332,7 @@ function closeReport() {
 
   if (!overlay) return;
 
-
-  overlay
-    .classList
-    .remove("open");
-
+  overlay.classList.remove("open");
 
   document.body.style.overflow =
     "";
@@ -1399,13 +1354,17 @@ function renderPersonnel() {
   if (!box) return;
 
 
+  const list =
+    [...state.personnel];
+
+
   box.innerHTML =
 
-    state.personnel.length
+    list.length
 
       ?
 
-      state.personnel
+      list
         .map(
           p => `
 
@@ -1427,6 +1386,7 @@ function renderPersonnel() {
                 <span class="tag">
 
                   LEVEL
+
                   ${escapeHTML(
                     p.clearance
                   )}
@@ -1503,7 +1463,7 @@ function renderDocuments() {
 
   box.innerHTML =
     empty(
-      "Documents remain available through their configured links."
+      "Documents remain available through their Google Doc links."
     );
 
 }
@@ -1513,9 +1473,7 @@ function renderDocuments() {
    EMPTY
    ================================================== */
 
-function empty(
-  message
-) {
+function empty(message) {
 
   return `
 
@@ -1557,8 +1515,7 @@ async function checkAdminSession() {
 
 
   currentUser =
-    data.session?.user ||
-    null;
+    data.session?.user || null;
 
 
   updateAdminUI();
@@ -1569,12 +1526,8 @@ async function checkAdminSession() {
 function isAdmin() {
 
   return Boolean(
-
     currentUser &&
-
-    currentUser.id ===
-      ADMIN_UID
-
+    currentUser.id === ADMIN_UID
   );
 
 }
@@ -1602,30 +1555,30 @@ function updateAdminUI() {
     );
 
 
-  if (!nav || !login || !dashboard)
-    return;
+  if (
+    isAdmin()
+  ) {
 
+    if (nav)
+      nav.classList.remove(
+        "hidden"
+      );
 
-  if (isAdmin()) {
+    if (login)
+      login.classList.add(
+        "hidden"
+      );
 
-    nav.classList.remove(
-      "hidden"
-    );
-
-    login.classList.add(
-      "hidden"
-    );
-
-    dashboard.classList.remove(
-      "hidden"
-    );
+    if (dashboard)
+      dashboard.classList.remove(
+        "hidden"
+      );
 
 
     const email =
       document.getElementById(
         "admin-email"
       );
-
 
     if (email) {
 
@@ -1641,19 +1594,172 @@ function updateAdminUI() {
 
   else {
 
-    nav.classList.add(
-      "hidden"
-    );
+    if (nav)
+      nav.classList.add(
+        "hidden"
+      );
 
-    login.classList.remove(
-      "hidden"
-    );
+    if (login)
+      login.classList.remove(
+        "hidden"
+      );
 
-    dashboard.classList.add(
-      "hidden"
-    );
+    if (dashboard)
+      dashboard.classList.add(
+        "hidden"
+      );
 
   }
+
+}
+
+
+/* ==================================================
+   LOGIN
+   ================================================== */
+
+const loginForm =
+  document.getElementById(
+    "login-form"
+  );
+
+
+if (loginForm) {
+
+  loginForm.addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+
+      const email =
+        document.getElementById(
+          "login-email"
+        ).value.trim();
+
+
+      const password =
+        document.getElementById(
+          "login-password"
+        ).value;
+
+
+      const errorBox =
+        document.getElementById(
+          "login-error"
+        );
+
+
+      if (errorBox) {
+
+        errorBox.classList.add(
+          "hidden"
+        );
+
+      }
+
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .auth
+          .signInWithPassword({
+            email,
+            password
+          });
+
+
+      if (error) {
+
+        if (errorBox) {
+
+          errorBox.textContent =
+            error.message;
+
+          errorBox.classList.remove(
+            "hidden"
+          );
+
+        }
+
+        return;
+
+      }
+
+
+      currentUser =
+        data.user;
+
+
+      if (!isAdmin()) {
+
+        await supabaseClient
+          .auth
+          .signOut();
+
+
+        currentUser = null;
+
+
+        if (errorBox) {
+
+          errorBox.textContent =
+            "ACCESS DENIED: This account is not authorized as an administrator.";
+
+          errorBox.classList.remove(
+            "hidden"
+          );
+
+        }
+
+        return;
+
+      }
+
+
+      updateAdminUI();
+
+      showSection("admin");
+
+    }
+
+  );
+
+}
+
+
+/* ==================================================
+   LOGOUT
+   ================================================== */
+
+const logoutButton =
+  document.getElementById(
+    "logout-button"
+  );
+
+
+if (logoutButton) {
+
+  logoutButton.addEventListener(
+    "click",
+    async () => {
+
+      await supabaseClient
+        .auth
+        .signOut();
+
+
+      currentUser = null;
+
+      updateAdminUI();
+
+      showSection("home");
+
+    }
+  );
 
 }
 
@@ -1664,9 +1770,7 @@ function updateAdminUI() {
 
 function renderAdminLists() {
 
-  if (!isAdmin())
-    return;
-
+  if (!isAdmin()) return;
 
   renderAdminPersonnel();
 
@@ -1703,9 +1807,7 @@ function renderAdminPersonnel() {
         .map(
           (p, index) => `
 
-            <div
-              class="admin-record"
-            >
+            <div class="admin-record">
 
               <div>
 
@@ -1717,6 +1819,7 @@ function renderAdminPersonnel() {
 
                 </strong>
 
+                <br>
 
                 <small>
 
@@ -1726,7 +1829,7 @@ function renderAdminPersonnel() {
 
                   |
 
-                  LEVEL
+                  Level
                   ${escapeHTML(
                     p.clearance
                   )}
@@ -1736,14 +1839,11 @@ function renderAdminPersonnel() {
               </div>
 
 
-              <div
-                class="admin-actions"
-              >
+              <div class="admin-actions">
 
                 <button
                   type="button"
                   onclick="movePersonnel(${index}, -1)"
-                  title="Move up"
                   ${index === 0 ? "disabled" : ""}
                 >
                   ▲
@@ -1753,8 +1853,12 @@ function renderAdminPersonnel() {
                 <button
                   type="button"
                   onclick="movePersonnel(${index}, 1)"
-                  title="Move down"
-                  ${index === state.personnel.length - 1 ? "disabled" : ""}
+                  ${
+                    index ===
+                    state.personnel.length - 1
+                      ? "disabled"
+                      : ""
+                  }
                 >
                   ▼
                 </button>
@@ -1848,36 +1952,54 @@ async function movePersonnel(
   } =
     await supabaseClient
       .from("personnel")
-      .upsert(
-
-        [
-
-          {
-            id: current.id,
-            sort_order: otherOrder
-          },
-
-          {
-            id: other.id,
-            sort_order: currentOrder
-          }
-
-        ],
-
-        {
-          onConflict: "id"
-        }
-
+      .update({
+        sort_order:
+          otherOrder
+      })
+      .eq(
+        "id",
+        current.id
       );
 
 
   if (error) {
 
+    alert(
+      "Could not move personnel: " +
+      error.message
+    );
+
     console.error(error);
 
+    return;
+
+  }
+
+
+  const {
+    error: secondError
+  } =
+    await supabaseClient
+      .from("personnel")
+      .update({
+        sort_order:
+          currentOrder
+      })
+      .eq(
+        "id",
+        other.id
+      );
+
+
+  if (secondError) {
+
     alert(
-      "Could not move personnel:\n" +
-      error.message
+      "Could not finish personnel move: " +
+      secondError.message
+    );
+
+    console.error(
+      secondError
     );
 
     return;
@@ -1894,12 +2016,9 @@ async function movePersonnel(
    DELETE PERSONNEL
    ================================================== */
 
-async function deletePersonnel(
-  id
-) {
+async function deletePersonnel(id) {
 
-  if (!isAdmin())
-    return;
+  if (!isAdmin()) return;
 
 
   if (
@@ -1919,13 +2038,16 @@ async function deletePersonnel(
     await supabaseClient
       .from("personnel")
       .delete()
-      .eq("id", id);
+      .eq(
+        "id",
+        id
+      );
 
 
   if (error) {
 
     alert(
-      "Could not delete personnel:\n" +
+      "Could not delete personnel: " +
       error.message
     );
 
@@ -1943,38 +2065,37 @@ async function deletePersonnel(
    ADD PERSONNEL
    ================================================== */
 
-const personnelForm =
+const personnelAdminForm =
   document.getElementById(
     "personnel-admin-form"
   );
 
 
-if (personnelForm) {
+if (personnelAdminForm) {
 
-  personnelForm.addEventListener(
+  personnelAdminForm.addEventListener(
     "submit",
     async event => {
 
       event.preventDefault();
 
 
-      if (!isAdmin())
-        return;
+      if (!isAdmin()) return;
 
 
       const maxOrder =
         state.personnel.reduce(
-
-          (max, p) =>
+          (
+            max,
+            p
+          ) =>
             Math.max(
               max,
               Number(
                 p.sort_order ?? -1
               )
             ),
-
           -1
-
         );
 
 
@@ -1986,52 +2107,34 @@ if (personnelForm) {
           .insert({
 
             name:
-              document
-                .getElementById(
-                  "admin-personnel-name"
-                )
-                .value
-                .trim(),
+              document.getElementById(
+                "admin-personnel-name"
+              ).value.trim(),
 
             rank:
-              document
-                .getElementById(
-                  "admin-personnel-rank"
-                )
-                .value
-                .trim(),
+              document.getElementById(
+                "admin-personnel-rank"
+              ).value.trim(),
 
             clearance:
-              document
-                .getElementById(
-                  "admin-personnel-clearance"
-                )
-                .value
-                .trim(),
+              document.getElementById(
+                "admin-personnel-clearance"
+              ).value.trim(),
 
             department:
-              document
-                .getElementById(
-                  "admin-personnel-department"
-                )
-                .value
-                .trim(),
+              document.getElementById(
+                "admin-personnel-department"
+              ).value.trim(),
 
             tests_conducted:
-              document
-                .getElementById(
-                  "admin-personnel-tests"
-                )
-                .value
-                .trim(),
+              document.getElementById(
+                "admin-personnel-tests"
+              ).value.trim(),
 
             status:
-              document
-                .getElementById(
-                  "admin-personnel-status"
-                )
-                .value
-                .trim(),
+              document.getElementById(
+                "admin-personnel-status"
+              ).value.trim(),
 
             sort_order:
               maxOrder + 1
@@ -2042,7 +2145,7 @@ if (personnelForm) {
       if (error) {
 
         alert(
-          "Could not add personnel:\n" +
+          "Could not add personnel: " +
           error.message
         );
 
@@ -2056,6 +2159,7 @@ if (personnelForm) {
       await loadData();
 
     }
+
   );
 
 }
@@ -2084,9 +2188,11 @@ function renderAdminSCPs() {
 
             <span>
 
-              ${escapeHTML(
-                s.number
-              )}
+              <strong>
+                ${escapeHTML(
+                  s.number
+                )}
+              </strong>
 
               —
 
@@ -2117,23 +2223,22 @@ function renderAdminSCPs() {
    ADD SCP
    ================================================== */
 
-const scpForm =
+const scpAdminForm =
   document.getElementById(
     "scp-admin-form"
   );
 
 
-if (scpForm) {
+if (scpAdminForm) {
 
-  scpForm.addEventListener(
+  scpAdminForm.addEventListener(
     "submit",
     async event => {
 
       event.preventDefault();
 
 
-      if (!isAdmin())
-        return;
+      if (!isAdmin()) return;
 
 
       const {
@@ -2144,53 +2249,39 @@ if (scpForm) {
           .insert({
 
             number:
-              document
-                .getElementById(
-                  "admin-scp-number"
-                )
-                .value,
+              document.getElementById(
+                "admin-scp-number"
+              ).value.trim(),
 
             name:
-              document
-                .getElementById(
-                  "admin-scp-name"
-                )
-                .value,
+              document.getElementById(
+                "admin-scp-name"
+              ).value.trim(),
 
             object_class:
-              document
-                .getElementById(
-                  "admin-scp-class"
-                )
-                .value,
+              document.getElementById(
+                "admin-scp-class"
+              ).value.trim(),
 
             risk_class:
-              document
-                .getElementById(
-                  "admin-scp-risk"
-                )
-                .value,
+              document.getElementById(
+                "admin-scp-risk"
+              ).value.trim(),
 
             containment_zone:
-              document
-                .getElementById(
-                  "admin-scp-zone"
-                )
-                .value,
+              document.getElementById(
+                "admin-scp-zone"
+              ).value.trim(),
 
             clearance:
-              document
-                .getElementById(
-                  "admin-scp-clearance"
-                )
-                .value,
+              document.getElementById(
+                "admin-scp-clearance"
+              ).value.trim(),
 
             description:
-              document
-                .getElementById(
-                  "admin-scp-description"
-                )
-                .value
+              document.getElementById(
+                "admin-scp-description"
+              ).value.trim()
 
           });
 
@@ -2198,7 +2289,7 @@ if (scpForm) {
       if (error) {
 
         alert(
-          "Could not add SCP:\n" +
+          "Could not add SCP: " +
           error.message
         );
 
@@ -2212,17 +2303,19 @@ if (scpForm) {
       await loadData();
 
     }
+
   );
 
 }
 
 
-async function deleteSCP(
-  id
-) {
+/* ==================================================
+   DELETE SCP
+   ================================================== */
 
-  if (!isAdmin())
-    return;
+async function deleteSCP(id) {
+
+  if (!isAdmin()) return;
 
 
   if (
@@ -2242,13 +2335,16 @@ async function deleteSCP(
     await supabaseClient
       .from("scps")
       .delete()
-      .eq("id", id);
+      .eq(
+        "id",
+        id
+      );
 
 
   if (error) {
 
     alert(
-      "Could not delete SCP:\n" +
+      "Could not delete SCP: " +
       error.message
     );
 
@@ -2263,7 +2359,7 @@ async function deleteSCP(
 
 
 /* ==================================================
-   ADMIN TESTS
+   ADMIN TEST LIST
    ================================================== */
 
 function renderAdminTests() {
@@ -2285,9 +2381,11 @@ function renderAdminTests() {
 
             <span>
 
-              ${escapeHTML(
-                t.test_number
-              )}
+              <strong>
+                ${escapeHTML(
+                  t.test_number
+                )}
+              </strong>
 
               —
 
@@ -2324,30 +2422,22 @@ function renderAdminTests() {
    ADD TEST
    ================================================== */
 
-const testForm =
+const testAdminForm =
   document.getElementById(
     "test-admin-form"
   );
 
 
-if (testForm) {
+if (testAdminForm) {
 
-  testForm.addEventListener(
+  testAdminForm.addEventListener(
     "submit",
     async event => {
 
       event.preventDefault();
 
 
-      if (!isAdmin())
-        return;
-
-
-      const get =
-        id =>
-          document
-            .getElementById(id)
-            .value;
+      if (!isAdmin()) return;
 
 
       const {
@@ -2358,79 +2448,79 @@ if (testForm) {
           .insert({
 
             test_number:
-              get(
+              document.getElementById(
                 "admin-test-number"
-              ),
+              ).value.trim(),
 
             date:
-              get(
+              document.getElementById(
                 "admin-test-date"
-              ),
+              ).value,
 
             scientist:
-              get(
+              document.getElementById(
                 "admin-test-scientist"
-              ),
+              ).value.trim(),
 
             clearance:
-              get(
+              document.getElementById(
                 "admin-test-clearance"
-              ),
+              ).value.trim(),
 
             scp:
-              get(
+              document.getElementById(
                 "admin-test-scp"
-              ),
+              ).value.trim(),
 
             question:
-              get(
+              document.getElementById(
                 "admin-test-question"
-              ),
+              ).value.trim(),
 
             hypothesis:
-              get(
+              document.getElementById(
                 "admin-test-hypothesis"
-              ),
+              ).value.trim(),
 
             log:
-              get(
+              document.getElementById(
                 "admin-test-log"
-              ),
+              ).value.trim(),
 
             outcome:
-              get(
+              document.getElementById(
                 "admin-test-outcome"
-              ),
+              ).value.trim(),
 
             results:
-              get(
+              document.getElementById(
                 "admin-test-results"
-              ),
+              ).value.trim(),
 
             research_notes:
-              get(
+              document.getElementById(
                 "admin-test-research"
-              ),
+              ).value.trim(),
 
             conclusion:
-              get(
+              document.getElementById(
                 "admin-test-conclusion"
-              ),
+              ).value.trim(),
 
             scientist_note:
-              get(
+              document.getElementById(
                 "admin-test-note"
-              ),
+              ).value.trim(),
 
             casualties:
-              get(
+              document.getElementById(
                 "admin-test-casualties"
-              ),
+              ).value.trim(),
 
             follow_up:
-              get(
+              document.getElementById(
                 "admin-test-followup"
-              )
+              ).value.trim()
 
           });
 
@@ -2438,7 +2528,7 @@ if (testForm) {
       if (error) {
 
         alert(
-          "Could not add test:\n" +
+          "Could not add test: " +
           error.message
         );
 
@@ -2452,17 +2542,19 @@ if (testForm) {
       await loadData();
 
     }
+
   );
 
 }
 
 
-async function deleteTest(
-  id
-) {
+/* ==================================================
+   DELETE TEST
+   ================================================== */
 
-  if (!isAdmin())
-    return;
+async function deleteTest(id) {
+
+  if (!isAdmin()) return;
 
 
   if (
@@ -2482,13 +2574,16 @@ async function deleteTest(
     await supabaseClient
       .from("tests")
       .delete()
-      .eq("id", id);
+      .eq(
+        "id",
+        id
+      );
 
 
   if (error) {
 
     alert(
-      "Could not delete test:\n" +
+      "Could not delete test: " +
       error.message
     );
 
@@ -2503,7 +2598,7 @@ async function deleteTest(
 
 
 /* ==================================================
-   ADMIN INCIDENTS
+   ADMIN INCIDENT LIST
    ================================================== */
 
 function renderAdminIncidents() {
@@ -2525,10 +2620,14 @@ function renderAdminIncidents() {
 
             <span>
 
-              ${escapeHTML(
-                i.incident_id ||
-                i.id
-              )}
+              <strong>
+
+                ${escapeHTML(
+                  i.incident_id ||
+                  i.id
+                )}
+
+              </strong>
 
               —
 
@@ -2559,30 +2658,22 @@ function renderAdminIncidents() {
    ADD INCIDENT
    ================================================== */
 
-const incidentForm =
+const incidentAdminForm =
   document.getElementById(
     "incident-admin-form"
   );
 
 
-if (incidentForm) {
+if (incidentAdminForm) {
 
-  incidentForm.addEventListener(
+  incidentAdminForm.addEventListener(
     "submit",
     async event => {
 
       event.preventDefault();
 
 
-      if (!isAdmin())
-        return;
-
-
-      const get =
-        id =>
-          document
-            .getElementById(id)
-            .value;
+      if (!isAdmin()) return;
 
 
       const {
@@ -2593,54 +2684,54 @@ if (incidentForm) {
           .insert({
 
             incident_id:
-              get(
+              document.getElementById(
                 "admin-incident-id"
-              ),
+              ).value.trim(),
 
             title:
-              get(
+              document.getElementById(
                 "admin-incident-title"
-              ),
+              ).value.trim(),
 
             date:
-              get(
+              document.getElementById(
                 "admin-incident-date"
-              ),
+              ).value,
 
             location:
-              get(
+              document.getElementById(
                 "admin-incident-location"
-              ),
+              ).value.trim(),
 
             scp:
-              get(
+              document.getElementById(
                 "admin-incident-scp"
-              ),
+              ).value.trim(),
 
             status:
-              get(
+              document.getElementById(
                 "admin-incident-status"
-              ),
+              ).value.trim(),
 
             summary:
-              get(
+              document.getElementById(
                 "admin-incident-summary"
-              ),
+              ).value.trim(),
 
             personnel:
-              get(
+              document.getElementById(
                 "admin-incident-personnel"
-              ),
+              ).value.trim(),
 
             casualties:
-              get(
+              document.getElementById(
                 "admin-incident-casualties"
-              ),
+              ).value.trim(),
 
             resolution:
-              get(
+              document.getElementById(
                 "admin-incident-resolution"
-              )
+              ).value.trim()
 
           });
 
@@ -2648,7 +2739,7 @@ if (incidentForm) {
       if (error) {
 
         alert(
-          "Could not add incident:\n" +
+          "Could not add incident: " +
           error.message
         );
 
@@ -2662,17 +2753,19 @@ if (incidentForm) {
       await loadData();
 
     }
+
   );
 
 }
 
 
-async function deleteIncident(
-  id
-) {
+/* ==================================================
+   DELETE INCIDENT
+   ================================================== */
 
-  if (!isAdmin())
-    return;
+async function deleteIncident(id) {
+
+  if (!isAdmin()) return;
 
 
   if (
@@ -2692,13 +2785,16 @@ async function deleteIncident(
     await supabaseClient
       .from("incidents")
       .delete()
-      .eq("id", id);
+      .eq(
+        "id",
+        id
+      );
 
 
   if (error) {
 
     alert(
-      "Could not delete incident:\n" +
+      "Could not delete incident: " +
       error.message
     );
 
@@ -2716,9 +2812,7 @@ async function deleteIncident(
    NAVIGATION
    ================================================== */
 
-function showSection(
-  section
-) {
+function showSection(section) {
 
   document
     .querySelectorAll(
@@ -2730,7 +2824,7 @@ function showSection(
         button.classList.toggle(
           "active",
           button.dataset.section ===
-            section
+          section
         );
 
       }
@@ -2754,11 +2848,8 @@ function showSection(
 
 
   window.scrollTo({
-
     top: 0,
-
     behavior: "smooth"
-
   });
 
 }
@@ -2775,8 +2866,24 @@ document
         "click",
         () => {
 
+          const section =
+            button.dataset.section;
+
+
+          if (
+            section === "admin" &&
+            !isAdmin()
+          ) {
+
+            showSection("admin");
+
+            return;
+
+          }
+
+
           showSection(
-            button.dataset.section
+            section
           );
 
         }
@@ -2800,10 +2907,13 @@ if (scpSearch) {
 
   scpSearch.addEventListener(
     "input",
-    event =>
+    event => {
+
       renderSCPs(
         event.target.value
-      )
+      );
+
+    }
   );
 
 }
@@ -2819,10 +2929,13 @@ if (testSearch) {
 
   testSearch.addEventListener(
     "input",
-    event =>
+    event => {
+
       renderTests(
         event.target.value
-      )
+      );
+
+    }
   );
 
 }
@@ -2853,8 +2966,7 @@ document.addEventListener(
   event => {
 
     if (
-      event.key ===
-      "Escape"
+      event.key === "Escape"
     ) {
 
       closeReport();
@@ -2869,20 +2981,15 @@ document.addEventListener(
    DARK / LIGHT MODE
    ================================================== */
 
-function setTheme(
-  theme
-) {
+function setTheme(theme) {
 
   if (
-    theme ===
-    "light"
+    theme === "light"
   ) {
 
     document.body
       .classList
-      .add(
-        "light-mode"
-      );
+      .add("light-mode");
 
 
     localStorage.setItem(
@@ -2896,9 +3003,7 @@ function setTheme(
 
     document.body
       .classList
-      .remove(
-        "light-mode"
-      );
+      .remove("light-mode");
 
 
     localStorage.setItem(
@@ -2921,10 +3026,7 @@ if (darkButton) {
 
   darkButton.addEventListener(
     "click",
-    () =>
-      setTheme(
-        "dark"
-      )
+    () => setTheme("dark")
   );
 
 }
@@ -2940,10 +3042,7 @@ if (lightButton) {
 
   lightButton.addEventListener(
     "click",
-    () =>
-      setTheme(
-        "light"
-      )
+    () => setTheme("light")
   );
 
 }
@@ -2959,11 +3058,19 @@ const savedTheme =
   );
 
 
-setTheme(
+if (
   savedTheme === "light"
-    ? "light"
-    : "dark"
-);
+) {
+
+  setTheme("light");
+
+}
+
+else {
+
+  setTheme("dark");
+
+}
 
 
 /* ==================================================
@@ -2976,8 +3083,7 @@ supabaseClient
     (_event, session) => {
 
       currentUser =
-        session?.user ||
-        null;
+        session?.user || null;
 
       updateAdminUI();
 
