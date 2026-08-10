@@ -1,358 +1,701 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SCD Scientific Database</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header class="site-header">
-    <div class="header-inner">
+```html
+<!-- =========================
+     DOCUMENTS SECTION
+     ========================= -->
+
+<section id="documents" class="page">
+  <div class="page-title">
+    <h2>DOCUMENTS</h2>
+    <p>General Scientific Department documentation.</p>
+  </div>
+
+  <div id="document-list" class="record-list"></div>
+</section>
+
+
+<!-- =========================
+     DOCUMENT READER
+     ========================= -->
+
+<div id="document-reader" class="document-reader hidden">
+
+  <div class="document-overlay" onclick="closeDocument()"></div>
+
+  <div class="document-window">
+
+    <div class="document-header">
       <div>
-        <div class="department">SCIENTIFIC DEPARTMENT</div>
-        <h1>SCD RESEARCH DATABASE</h1>
-        <div class="classification">FOUNDATION INTERNAL USE ONLY</div>
+        <span class="document-classification">
+          SCIENTIFIC DEPARTMENT DATABASE
+        </span>
+
+        <h2 id="document-reader-title">
+          DOCUMENT
+        </h2>
       </div>
-      <div class="status">SYSTEM STATUS: <span>ONLINE</span></div>
+
+      <button
+        class="document-close"
+        onclick="closeDocument()"
+        aria-label="Close document"
+      >
+        ×
+      </button>
     </div>
-  </header>
 
-  <nav class="nav">
-    <button class="nav-button active" data-section="home">HOME</button>
-    <button class="nav-button" data-section="scps">SCP FILES</button>
-    <button class="nav-button" data-section="tests">TEST REPORTS</button>
-    <button class="nav-button" data-section="research">RESEARCH NOTES</button>
-    <button class="nav-button" data-section="incidents">INCIDENTS</button>
-    <button class="nav-button" data-section="personnel">PERSONNEL</button>
-    <button class="nav-button" data-section="documents">DOCUMENTS</button>
-  </nav>
 
-  <main class="container">
-    <section id="home" class="page active">
-      <div class="page-title">
-        <h2>DATABASE OVERVIEW</h2>
-        <p>Scientific Department research and testing archive.</p>
-      </div>
+    <div class="document-meta">
+      <span id="document-reader-id"></span>
+      <span id="document-reader-author"></span>
+      <span id="document-reader-date"></span>
+    </div>
 
-      <div class="notice">
-        <strong>NOTICE:</strong> Information contained within this database may be restricted by clearance level.
-        Unauthorized distribution of Foundation research is prohibited.
-      </div>
 
-      <div class="stats" id="stats"></div>
+    <div
+      class="document-content"
+      id="document-reader-content"
+    ></div>
 
-      <div class="grid-two">
-        <div class="panel">
-          <div class="panel-title">RECENT TEST REPORTS</div>
-          <div id="recent-tests"></div>
-        </div>
 
-        <div class="panel">
-          <div class="panel-title">RECENT RESEARCH NOTES</div>
-          <div id="recent-research"></div>
-        </div>
-      </div>
+    <div class="document-footer">
+      <span>
+        SCIENTIFIC DEPARTMENT // INTERNAL ARCHIVE
+      </span>
 
-      <div class="panel">
-        <div class="panel-title">DATABASE INFORMATION</div>
-        <p>
-          This database contains records created by members of the Scientific Department.
-          Test reports, research notes, incident reports and personnel records are archived here
-          for internal reference.
-        </p>
-      </div>
-    </section>
+      <button onclick="closeDocument()">
+        CLOSE DOCUMENT
+      </button>
+    </div>
 
-    <section id="scps" class="page">
-      <div class="page-title">
-        <h2>SCP FILES</h2>
-        <p>Known anomalies and associated research information.</p>
-      </div>
-      <div class="toolbar">
-        <input id="scp-search" type="search" placeholder="Search SCP number or name...">
-      </div>
-      <div id="scp-list" class="record-list"></div>
-    </section>
+  </div>
+</div>
 
-    <section id="tests" class="page">
-      <div class="page-title">
-        <h2>TEST REPORTS</h2>
-        <p>Scientific Department experiment archive.</p>
-      </div>
-      <div class="toolbar">
-        <input id="test-search" type="search" placeholder="Search test number, SCP, scientist...">
-      </div>
-      <div id="test-list" class="record-list"></div>
-    </section>
 
-    <section id="research" class="page">
-      <div class="page-title">
-        <h2>RESEARCH NOTES</h2>
-        <p>Short observations, theories and follow-up research.</p>
-      </div>
-      <div id="research-list" class="record-list"></div>
-    </section>
+<!-- =========================
+     DOCUMENT STYLES
+     ========================= -->
 
-    <section id="incidents" class="page">
-      <div class="page-title">
-        <h2>INCIDENT REPORTS</h2>
-        <p>Archived containment and research incidents.</p>
-      </div>
-      <div id="incident-list" class="record-list"></div>
-    </section>
+<style>
 
-    <section id="personnel" class="page">
-      <div class="page-title">
-        <h2>PERSONNEL</h2>
-        <p>Scientific Department personnel records.</p>
-      </div>
-      <div id="personnel-list" class="record-list"></div>
-    </section>
+.document-reader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
 
-    <section id="documents" class="page">
-      <div class="page-title">
-        <h2>DOCUMENTS</h2>
-        <p>General Scientific Department documentation.</p>
-      </div>
-      <div id="document-list" class="record-list"></div>
-    </section>
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    <div id="error" class="error hidden"></div>
-  </main>
+.document-reader.hidden {
+  display: none;
+}
 
-  <footer>
-    SCD SCIENTIFIC DATABASE &mdash; FOUNDATION INTERNAL ARCHIVE
-    <span id="updated"></span>
-  </footer>
+
+.document-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.88);
+}
+
+
+.document-window {
+  position: relative;
+
+  width: min(900px, 90vw);
+  max-height: 85vh;
+
+  background: #111;
+
+  border: 1px solid #555;
+
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.9);
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 1;
+}
+
+
+/* HEADER */
+
+.document-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: 20px 24px;
+
+  background: #181818;
+
+  border-bottom: 1px solid #444;
+}
+
+
+.document-classification {
+  display: block;
+
+  font-size: 10px;
+
+  letter-spacing: 2px;
+
+  color: #777;
+}
+
+
+.document-header h2 {
+  margin: 8px 0 0;
+
+  font-size: 22px;
+
+  color: #eee;
+}
+
+
+.document-close {
+  width: 38px;
+  height: 38px;
+
+  background: transparent;
+
+  border: 1px solid #555;
+
+  color: #aaa;
+
+  font-size: 25px;
+
+  cursor: pointer;
+}
+
+
+.document-close:hover {
+  background: #333;
+
+  color: #fff;
+}
+
+
+/* META INFORMATION */
+
+.document-meta {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 20px;
+
+  padding: 12px 24px;
+
+  background: #0c0c0c;
+
+  border-bottom: 1px solid #333;
+
+  color: #888;
+
+  font-size: 11px;
+}
+
+
+/* DOCUMENT TEXT */
+
+.document-content {
+  padding: 30px;
+
+  overflow-y: auto;
+
+  min-height: 250px;
+
+  color: #ccc;
+
+  line-height: 1.7;
+
+  font-size: 14px;
+}
+
+
+.document-content h3 {
+  margin-top: 25px;
+
+  margin-bottom: 10px;
+
+  color: #eee;
+
+  font-size: 15px;
+
+  letter-spacing: 1px;
+}
+
+
+.document-content h3:first-child {
+  margin-top: 0;
+}
+
+
+.document-content p {
+  margin-bottom: 16px;
+}
+
+
+.document-content strong {
+  color: #fff;
+}
+
+
+/* FOOTER */
+
+.document-footer {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 12px 24px;
+
+  background: #181818;
+
+  border-top: 1px solid #444;
+
+  color: #666;
+
+  font-size: 9px;
+
+  letter-spacing: 1px;
+}
+
+
+.document-footer button {
+  background: transparent;
+
+  border: 1px solid #555;
+
+  color: #aaa;
+
+  padding: 7px 14px;
+
+  cursor: pointer;
+
+  font-size: 10px;
+}
+
+
+.document-footer button:hover {
+  background: #333;
+
+  color: #fff;
+}
+
+
+/* CLICKABLE DOCUMENTS */
+
+#document-list .document-record {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 16px 18px;
+
+  margin-bottom: 8px;
+
+  background: rgba(255, 255, 255, 0.02);
+
+  border: 1px solid #333;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+
+#document-list .document-record:hover {
+  background: rgba(255, 255, 255, 0.06);
+
+  border-color: #777;
+}
+
+
+.document-record-left {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+
+.document-record-id {
+  color: #777;
+
+  font-size: 10px;
+
+  letter-spacing: 1px;
+}
+
+
+.document-record-title {
+  color: #ddd;
+
+  font-size: 14px;
+}
+
+
+.document-record-description {
+  color: #777;
+
+  font-size: 11px;
+}
+
+
+.document-record-right {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 5px;
+
+  white-space: nowrap;
+}
+
+
+.document-record-date {
+  color: #666;
+
+  font-size: 10px;
+}
+
+
+.document-read {
+  color: #aaa;
+
+  font-size: 10px;
+
+  letter-spacing: 1px;
+}
+
+
+.document-record:hover .document-read {
+  color: #fff;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+  .document-window {
+    width: 95vw;
+
+    max-height: 90vh;
+  }
+
+  .document-header {
+    padding: 16px;
+  }
+
+  .document-content {
+    padding: 20px;
+  }
+
+  .document-meta {
+    padding: 10px 16px;
+
+    gap: 10px;
+  }
+
+  .document-footer {
+    padding: 10px 16px;
+  }
+
+  #document-list .document-record {
+    align-items: flex-start;
+  }
+
+  .document-record-right {
+    align-items: flex-end;
+  }
+
+}
+
+</style>
+
+
+<!-- =========================
+     DOCUMENT JAVASCRIPT
+     ========================= -->
 
 <script>
-const state = {
-  scps: [],
-  tests: [],
-  research: [],
-  incidents: [],
-  personnel: [],
-  documents: []
-};
 
-async function loadData() {
-  const files = Object.keys(state);
+const documents = [
 
-  try {
-    await Promise.all(files.map(async (file) => {
-      const response = await fetch(`data/${file}.json`);
-      if (!response.ok) throw new Error(`Could not load data/${file}.json`);
-      state[file] = await response.json();
-    }));
+  {
+    id: "DOC-001",
 
-    renderAll();
-    document.getElementById("updated").textContent =
-      " | DATABASE LOADED: " + new Date().toLocaleDateString();
-  } catch (error) {
-    const box = document.getElementById("error");
-    box.classList.remove("hidden");
-    box.textContent =
-      "DATABASE ERROR: " + error.message +
-      " — If you opened index.html directly, use GitHub Pages or a local web server.";
+    title: "Scientific Department Research Protocol",
+
+    description:
+      "Standard procedures for scientific research and experimentation.",
+
+    author: "Dr. ███████",
+
+    date: "2026-08-01",
+
+    content: `
+      <h3>PURPOSE</h3>
+
+      <p>
+        This document establishes the standard research procedures
+        to be followed by members of the Scientific Department.
+      </p>
+
+      <h3>RESEARCH REQUIREMENTS</h3>
+
+      <p>
+        All experiments involving anomalous objects must be approved
+        by the appropriate clearance authority before testing begins.
+      </p>
+
+      <p>
+        Researchers are required to document experimental conditions,
+        observations, unexpected events, and final conclusions.
+      </p>
+
+      <h3>SECURITY NOTICE</h3>
+
+      <p>
+        Unauthorized distribution of this document is prohibited.
+        Copies must remain within approved Foundation information systems.
+      </p>
+    `
+  },
+
+
+  {
+    id: "DOC-002",
+
+    title: "Containment Research Guidelines",
+
+    description:
+      "Guidelines for conducting research on contained anomalies.",
+
+    author: "Scientific Department",
+
+    date: "2026-07-24",
+
+    content: `
+      <h3>OVERVIEW</h3>
+
+      <p>
+        These guidelines describe recommended procedures for conducting
+        scientific research on contained anomalies.
+      </p>
+
+      <h3>TESTING</h3>
+
+      <p>
+        Personnel must verify containment integrity before beginning
+        any experiment.
+      </p>
+
+      <p>
+        Testing must immediately cease if containment conditions
+        change unexpectedly.
+      </p>
+
+      <h3>CLEARANCE</h3>
+
+      <p>
+        Access to experimental data is determined by personnel
+        clearance level and the classification of the associated anomaly.
+      </p>
+    `
+  },
+
+
+  {
+    id: "DOC-003",
+
+    title: "Anomalous Materials Research",
+
+    description:
+      "Archived research concerning anomalous material properties.",
+
+    author: "Research Division",
+
+    date: "2026-07-18",
+
+    content: `
+      <h3>SUMMARY</h3>
+
+      <p>
+        Preliminary research has identified several unusual properties
+        among recovered anomalous materials.
+      </p>
+
+      <h3>OBSERVATIONS</h3>
+
+      <p>
+        Samples demonstrated behavior inconsistent with conventional
+        material science models.
+      </p>
+
+      <p>
+        Further testing is required before a definitive classification
+        can be assigned.
+      </p>
+
+      <h3>STATUS</h3>
+
+      <p>
+        Research remains ongoing.
+      </p>
+    `
   }
-}
 
-function escapeHTML(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+];
 
-function renderAll() {
-  renderStats();
-  renderRecent();
-  renderSCPs();
-  renderTests();
-  renderResearch();
-  renderIncidents();
-  renderPersonnel();
-  renderDocuments();
-}
-
-function renderStats() {
-  document.getElementById("stats").innerHTML = `
-    <div class="stat"><strong>${state.scps.length}</strong><span>SCP FILES</span></div>
-    <div class="stat"><strong>${state.tests.length}</strong><span>TEST REPORTS</span></div>
-    <div class="stat"><strong>${state.research.length}</strong><span>RESEARCH NOTES</span></div>
-    <div class="stat"><strong>${state.incidents.length}</strong><span>INCIDENTS</span></div>
-    <div class="stat"><strong>${state.personnel.length}</strong><span>PERSONNEL</span></div>
-  `;
-}
-
-function renderRecent() {
-  const tests = [...state.tests].slice(-3).reverse();
-  document.getElementById("recent-tests").innerHTML = tests.length
-    ? tests.map(testCompact).join("")
-    : empty("No test reports filed.");
-
-  const notes = [...state.research].slice(-3).reverse();
-  document.getElementById("recent-research").innerHTML = notes.length
-    ? notes.map(noteCompact).join("")
-    : empty("No research notes filed.");
-}
-
-function testCompact(t) {
-  return `
-    <div class="compact-record">
-      <b>${escapeHTML(t.test_number)}</b>
-      <span>${escapeHTML(t.scp)} — ${escapeHTML(t.scientist)}</span>
-      <small>${escapeHTML(t.date)} | ${escapeHTML(t.outcome)}</small>
-    </div>`;
-}
-
-function noteCompact(n) {
-  return `
-    <div class="compact-record">
-      <b>${escapeHTML(n.id)}</b>
-      <span>${escapeHTML(n.title)}</span>
-      <small>${escapeHTML(n.author)} | ${escapeHTML(n.date)}</small>
-    </div>`;
-}
-
-function renderSCPs(filter = "") {
-  const q = filter.toLowerCase();
-  const records = state.scps.filter(s =>
-    `${s.number} ${s.name} ${s.object_class}`.toLowerCase().includes(q)
-  );
-
-  document.getElementById("scp-list").innerHTML =
-    records.length ? records.map(scpCard).join("") : empty("No SCP files found.");
-}
-
-function scpCard(s) {
-  return `
-    <article class="record">
-      <div class="record-head">
-        <h3>${escapeHTML(s.number)} — ${escapeHTML(s.name)}</h3>
-        <span class="tag">${escapeHTML(s.object_class)}</span>
-      </div>
-      <div class="meta">
-        Risk: ${escapeHTML(s.risk_class)} | Zone: ${escapeHTML(s.containment_zone)}
-      </div>
-      <p>${escapeHTML(s.description)}</p>
-      <div class="record-foot">Clearance: Level ${escapeHTML(s.clearance)}</div>
-    </article>`;
-}
-
-function renderTests(filter = "") {
-  const q = filter.toLowerCase();
-  const records = state.tests.filter(t =>
-    `${t.test_number} ${t.scp} ${t.scientist} ${t.question} ${t.outcome}`
-      .toLowerCase().includes(q)
-  );
-
-  document.getElementById("test-list").innerHTML =
-    records.length ? records.map(testCard).join("") : empty("No test reports found.");
-}
-
-function testCard(t) {
-  return `
-    <article class="record">
-      <div class="record-head">
-        <h3>${escapeHTML(t.test_number)} — ${escapeHTML(t.scp)}</h3>
-        <span class="tag">${escapeHTML(t.outcome)}</span>
-      </div>
-      <div class="meta">
-        ${escapeHTML(t.date)} | Scientist: ${escapeHTML(t.scientist)} | Clearance: ${escapeHTML(t.clearance)}
-      </div>
-      <p><strong>Question:</strong> ${escapeHTML(t.question)}</p>
-      <p><strong>Hypothesis:</strong> ${escapeHTML(t.hypothesis)}</p>
-      <div class="log"><strong>TEST LOG</strong><br>${escapeHTML(t.log)}</div>
-      <p><strong>Results:</strong> ${escapeHTML(t.results)}</p>
-      <p><strong>Scientist Note:</strong> "${escapeHTML(t.scientist_note)}"</p>
-      <div class="record-foot">
-        Casualties: ${escapeHTML(t.casualties)} | Follow-up: ${escapeHTML(t.follow_up)}
-      </div>
-    </article>`;
-}
-
-function renderResearch() {
-  document.getElementById("research-list").innerHTML =
-    state.research.length ? state.research.slice().reverse().map(n => `
-      <article class="record">
-        <div class="record-head">
-          <h3>${escapeHTML(n.id)} — ${escapeHTML(n.title)}</h3>
-          <span class="tag">${escapeHTML(n.status)}</span>
-        </div>
-        <div class="meta">${escapeHTML(n.date)} | ${escapeHTML(n.author)} | SCP: ${escapeHTML(n.scp)}</div>
-        <p>${escapeHTML(n.content)}</p>
-      </article>
-    `).join("") : empty("No research notes found.");
-}
-
-function renderIncidents() {
-  document.getElementById("incident-list").innerHTML =
-    state.incidents.length ? state.incidents.slice().reverse().map(i => `
-      <article class="record">
-        <div class="record-head">
-          <h3>${escapeHTML(i.id)} — ${escapeHTML(i.title)}</h3>
-          <span class="tag">${escapeHTML(i.status)}</span>
-        </div>
-        <div class="meta">${escapeHTML(i.date)} | ${escapeHTML(i.location)} | SCP: ${escapeHTML(i.scp)}</div>
-        <p><strong>Summary:</strong> ${escapeHTML(i.summary)}</p>
-        <p><strong>Personnel:</strong> ${escapeHTML(i.personnel)}</p>
-        <p><strong>Casualties:</strong> ${escapeHTML(i.casualties)}</p>
-        <p><strong>Resolution:</strong> ${escapeHTML(i.resolution)}</p>
-      </article>
-    `).join("") : empty("No incident reports found.");
-}
-
-function renderPersonnel() {
-  document.getElementById("personnel-list").innerHTML =
-    state.personnel.length ? state.personnel.map(p => `
-      <article class="record personnel-record">
-        <div class="record-head">
-          <h3>${escapeHTML(p.name)}</h3>
-          <span class="tag">LEVEL ${escapeHTML(p.clearance)}</span>
-        </div>
-        <div class="meta">${escapeHTML(p.rank)} | ${escapeHTML(p.department)}</div>
-        <p>Tests conducted: ${escapeHTML(p.tests_conducted)}</p>
-        <p>Status: ${escapeHTML(p.status)}</p>
-      </article>
-    `).join("") : empty("No personnel records found.");
-}
 
 function renderDocuments() {
-  document.getElementById("document-list").innerHTML =
-    state.documents.length ? state.documents.map(d => `
-      <article class="record">
-        <div class="record-head">
-          <h3>${escapeHTML(d.id)} — ${escapeHTML(d.title)}</h3>
-          <span class="tag">${escapeHTML(d.type)}</span>
+
+  const list =
+    document.getElementById("document-list");
+
+  if (!list) {
+    return;
+  }
+
+
+  list.innerHTML = documents.map((doc, index) => {
+
+    return `
+
+      <div
+        class="document-record"
+        onclick="openDocument(${index})"
+      >
+
+        <div class="document-record-left">
+
+          <span class="document-record-id">
+            ${doc.id}
+          </span>
+
+          <span class="document-record-title">
+            ${doc.title}
+          </span>
+
+          <span class="document-record-description">
+            ${doc.description}
+          </span>
+
         </div>
-        <div class="meta">Clearance: ${escapeHTML(d.clearance)} | Updated: ${escapeHTML(d.updated)}</div>
-        <p>${escapeHTML(d.description)}</p>
-      </article>
-    `).join("") : empty("No documents found.");
+
+
+        <div class="document-record-right">
+
+          <span class="document-record-date">
+            ${doc.date}
+          </span>
+
+          <span class="document-read">
+            READ MORE →
+          </span>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }).join("");
+
 }
 
-function empty(message) {
-  return `<div class="empty">${escapeHTML(message)}</div>`;
+
+function openDocument(index) {
+
+  const doc = documents[index];
+
+  if (!doc) {
+    return;
+  }
+
+
+  document.getElementById(
+    "document-reader-title"
+  ).textContent = doc.title;
+
+
+  document.getElementById(
+    "document-reader-id"
+  ).textContent = doc.id;
+
+
+  document.getElementById(
+    "document-reader-author"
+  ).textContent = "AUTHOR: " + doc.author;
+
+
+  document.getElementById(
+    "document-reader-date"
+  ).textContent = "DATE: " + doc.date;
+
+
+  document.getElementById(
+    "document-reader-content"
+  ).innerHTML = doc.content;
+
+
+  document.getElementById(
+    "document-reader"
+  ).classList.remove("hidden");
+
+
+  document.body.style.overflow = "hidden";
+
 }
 
-document.querySelectorAll(".nav-button").forEach(button => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".nav-button").forEach(b => b.classList.remove("active"));
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    button.classList.add("active");
-    document.getElementById(button.dataset.section).classList.add("active");
-    window.scrollTo({top: 0, behavior: "smooth"});
-  });
+
+function closeDocument() {
+
+  document.getElementById(
+    "document-reader"
+  ).classList.add("hidden");
+
+
+  document.body.style.overflow = "";
+
+}
+
+
+/* ESC KEY CLOSES DOCUMENT */
+
+document.addEventListener("keydown", function(event) {
+
+  if (event.key === "Escape") {
+
+    closeDocument();
+
+  }
+
 });
 
-document.getElementById("scp-search").addEventListener("input", e => renderSCPs(e.target.value));
-document.getElementById("test-search").addEventListener("input", e => renderTests(e.target.value));
 
-loadData();
+/* LOAD DOCUMENTS */
+
+renderDocuments();
+
 </script>
-</body>
-</html>
+```
