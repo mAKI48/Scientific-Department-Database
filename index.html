@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SCD Scientific Database</title>
+
+  <title>SCD — Scientific Database</title>
 
   <style>
     * {
@@ -13,29 +14,31 @@
 
     body {
       margin: 0;
-      background: #0b0d0f;
-      color: #d7d7d7;
+      background: #080b0d;
+      color: #d7dde0;
       font-family: Arial, Helvetica, sans-serif;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
     header {
-      background: #111518;
-      border-bottom: 1px solid #30363a;
-      padding: 20px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      background: #0d1114;
+      border-bottom: 1px solid #263038;
+      padding: 20px 30px;
     }
 
     header h1 {
       margin: 0;
-      color: #e8e8e8;
+      color: #e8edf0;
       font-size: 24px;
+      letter-spacing: 2px;
     }
 
     header p {
-      margin: 5px 0 0;
-      color: #777;
+      margin: 6px 0 0;
+      color: #78858d;
       font-size: 12px;
     }
 
@@ -43,31 +46,26 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-top: 15px;
+      padding: 12px 20px;
+      background: #0a0e10;
+      border-bottom: 1px solid #20282d;
     }
 
-    button,
-    input,
-    textarea,
-    select {
-      font: inherit;
-    }
-
-    button {
-      background: #171c20;
-      color: #ccc;
-      border: 1px solid #343b40;
-      padding: 9px 14px;
+    .nav-button {
+      background: #11171b;
+      color: #9ba7ad;
+      border: 1px solid #263138;
+      padding: 10px 14px;
       cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
     }
 
-    button:hover {
-      background: #242b30;
-    }
-
+    .nav-button:hover,
     .nav-button.active {
-      background: #30383d;
-      color: white;
+      background: #1b2429;
+      color: #fff;
+      border-color: #4c5960;
     }
 
     main {
@@ -84,75 +82,42 @@
       display: block;
     }
 
-    .panel,
-    .card,
-    .stat {
-      background: #111518;
-      border: 1px solid #2c3337;
-      padding: 18px;
-      margin-bottom: 15px;
+    .panel {
+      background: #0d1215;
+      border: 1px solid #252e34;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #e6ebed;
+      letter-spacing: 1px;
+    }
+
+    h3 {
+      color: #cfd7da;
     }
 
     .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin: 20px 0;
-    }
-
-    .stat {
-      margin: 0;
-      text-align: center;
-      color: #aaa;
       white-space: pre-line;
-    }
-
-    .card {
-      cursor: pointer;
-    }
-
-    .card:hover {
-      border-color: #555;
-    }
-
-    .title {
-      color: white;
+      background: #11171b;
+      border: 1px solid #293239;
+      padding: 18px;
+      line-height: 1.8;
       font-weight: bold;
-      font-size: 17px;
-      margin-bottom: 8px;
     }
 
-    .muted {
-      color: #777;
-      font-size: 13px;
-    }
-
-    .danger {
-      color: #e06b6b;
-    }
-
-    .success {
-      color: #75b798;
-    }
-
-    .search {
-      width: 100%;
-      background: #0d1012;
-      color: white;
-      border: 1px solid #343b40;
-      padding: 12px;
-      margin: 10px 0 15px;
-    }
-
-    textarea,
     input,
+    textarea,
     select {
       width: 100%;
-      background: #0d1012;
-      color: white;
-      border: 1px solid #343b40;
+      background: #080c0f;
+      color: #e1e7e9;
+      border: 1px solid #303b42;
       padding: 10px;
-      margin: 5px 0 10px;
+      margin: 5px 0 12px;
+      font-family: inherit;
     }
 
     textarea {
@@ -160,73 +125,66 @@
       resize: vertical;
     }
 
-    label {
-      display: block;
-      margin-top: 8px;
-      color: #aaa;
-      font-size: 13px;
+    button {
+      background: #151d21;
+      color: #dce3e6;
+      border: 1px solid #3a474e;
+      padding: 9px 13px;
+      cursor: pointer;
+      font-weight: bold;
     }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
+    button:hover {
+      background: #202b31;
     }
 
-    .hidden {
-      display: none !important;
+    .danger {
+      border-color: #743b3b;
+      color: #ff9999;
     }
 
-    #error {
-      background: #351717;
-      border: 1px solid #713333;
-      color: #ff9b9b;
-      padding: 12px;
-      margin-bottom: 15px;
-      white-space: pre-wrap;
+    .move-button {
+      min-width: 75px;
+      margin-left: 5px;
     }
 
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 100;
-      overflow-y: auto;
-      padding: 30px;
+    .card {
+      background: #0d1215;
+      border: 1px solid #283138;
+      padding: 18px;
+      margin-bottom: 12px;
+      cursor: pointer;
     }
 
-    .overlay.open {
-      display: block;
+    .card:hover {
+      border-color: #4b5961;
+      background: #10171b;
     }
 
-    .report {
-      max-width: 900px;
-      margin: auto;
-      background: #101416;
-      border: 1px solid #3a4247;
-      padding: 25px;
+    .card-title {
+      font-size: 17px;
+      font-weight: bold;
+      color: #edf1f2;
     }
 
-    .report-section {
-      border-top: 1px solid #2c3337;
-      padding: 15px 0;
-      white-space: pre-wrap;
-    }
-
-    .report-section h3 {
-      color: #999;
+    .muted {
+      color: #7f8b91;
       font-size: 12px;
-      margin: 0 0 8px;
     }
 
     .admin-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
-      padding: 10px;
-      border-bottom: 1px solid #292f33;
+      padding: 12px;
+      margin-bottom: 8px;
+      background: #10161a;
+      border: 1px solid #293239;
+    }
+
+    .admin-row-info {
+      flex: 1;
     }
 
     .admin-actions {
@@ -235,21 +193,93 @@
       flex-wrap: wrap;
     }
 
-    .danger-button {
-      border-color: #713333;
-      color: #ff9b9b;
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
     }
 
-    .success-button {
-      border-color: #365d47;
-      color: #9ad5b2;
+    .full {
+      grid-column: 1 / -1;
     }
 
-    footer {
-      text-align: center;
+    #error,
+    #login-error {
+      background: #351616;
+      border: 1px solid #713838;
+      color: #ffb0b0;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+
+    #updated {
+      color: #68757c;
+      font-size: 11px;
+      margin-top: 10px;
+    }
+
+    #report-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.82);
+      display: none;
+      z-index: 9999;
+      overflow-y: auto;
       padding: 30px;
-      color: #555;
+    }
+
+    #report-overlay.open {
+      display: block;
+    }
+
+    #report-window {
+      max-width: 900px;
+      margin: 30px auto;
+      background: #0b1013;
+      border: 1px solid #3a454c;
+      padding: 25px;
+    }
+
+    #report-close {
+      float: right;
+    }
+
+    .report-section {
+      margin-top: 20px;
+      border-top: 1px solid #293238;
+      padding-top: 15px;
+    }
+
+    .report-section-title {
+      color: #9da9af;
+      font-weight: bold;
       font-size: 12px;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .report-section-value {
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      nav {
+        padding: 10px;
+      }
+
+      main {
+        padding: 12px;
+      }
     }
   </style>
 </head>
@@ -257,18 +287,26 @@
 <body>
 
 <header>
-  <h1>SCD SCIENTIFIC DATABASE</h1>
-  <p>SCIENTIFIC DEPARTMENT // FOUNDATION INTERNAL ARCHIVE</p>
-
-  <nav>
-    <button class="nav-button active" data-section="home">HOME</button>
-    <button class="nav-button" data-section="scps">SCP FILES</button>
-    <button class="nav-button" data-section="tests">TEST REPORTS</button>
-    <button class="nav-button" data-section="incidents">INCIDENTS</button>
-    <button class="nav-button" data-section="personnel">PERSONNEL</button>
-    <button class="nav-button" data-section="admin" id="admin-nav-button">ADMIN</button>
-  </nav>
+  <h1>SCD — SCIENTIFIC DATABASE</h1>
+  <p>SECURE FOUNDATION SCIENTIFIC ARCHIVE</p>
 </header>
+
+<nav>
+  <button class="nav-button active" data-section="home">HOME</button>
+  <button class="nav-button" data-section="scps">SCP FILES</button>
+  <button class="nav-button" data-section="tests">TEST REPORTS</button>
+  <button class="nav-button" data-section="incidents">INCIDENTS</button>
+  <button class="nav-button" data-section="personnel">PERSONNEL</button>
+  <button class="nav-button" data-section="documents">DOCUMENTS</button>
+
+  <button
+    class="nav-button hidden"
+    id="admin-nav-button"
+    data-section="admin"
+  >
+    ADMIN
+  </button>
+</nav>
 
 <main>
 
@@ -276,95 +314,155 @@
 
   <!-- HOME -->
   <section id="home" class="page active">
+
     <div class="panel">
-      <h2>Scientific Database</h2>
+      <h2>SCD DATABASE</h2>
       <p>
-        Welcome to the SCD Scientific Database.
-        All records are stored in the Foundation database.
+        Welcome to the Scientific Department internal database.
       </p>
-      <p class="muted" id="updated">DATABASE STATUS: CONNECTING...</p>
+
+      <div id="stats" class="stats">
+        DATABASE LOADING...
+      </div>
+
+      <div id="updated"></div>
     </div>
 
-    <div id="stats" class="stats"></div>
-
     <div class="panel">
-      <h2>Recent Test Reports</h2>
+      <h2>RECENT TEST REPORTS</h2>
       <div id="recent-tests"></div>
     </div>
+
   </section>
 
   <!-- SCP FILES -->
   <section id="scps" class="page">
+
     <div class="panel">
       <h2>SCP FILES</h2>
-      <input id="scp-search" class="search" placeholder="Search SCP files...">
+
+      <input
+        id="scp-search"
+        type="search"
+        placeholder="Search SCP files..."
+      >
+
       <div id="scp-list"></div>
     </div>
+
   </section>
 
-  <!-- TESTS -->
+  <!-- TEST REPORTS -->
   <section id="tests" class="page">
+
     <div class="panel">
       <h2>TEST REPORTS</h2>
-      <input id="test-search" class="search" placeholder="Search test reports...">
+
+      <input
+        id="test-search"
+        type="search"
+        placeholder="Search test reports..."
+      >
+
       <div id="test-list"></div>
     </div>
+
   </section>
 
   <!-- INCIDENTS -->
   <section id="incidents" class="page">
+
     <div class="panel">
       <h2>INCIDENT REPORTS</h2>
+
       <div id="incident-list"></div>
     </div>
+
   </section>
 
   <!-- PERSONNEL -->
   <section id="personnel" class="page">
+
     <div class="panel">
       <h2>PERSONNEL</h2>
+
       <div id="personnel-list"></div>
     </div>
+
+  </section>
+
+  <!-- DOCUMENTS -->
+  <section id="documents" class="page">
+
+    <div class="panel">
+      <h2>DOCUMENTS</h2>
+
+      <div id="document-list"></div>
+    </div>
+
   </section>
 
   <!-- ADMIN -->
   <section id="admin" class="page">
 
+    <!-- LOGIN -->
     <div id="admin-login" class="panel">
+
       <h2>ADMINISTRATOR LOGIN</h2>
 
       <form id="login-form">
+
         <label>Email</label>
-        <input id="login-email" type="email" required>
+        <input
+          id="login-email"
+          type="email"
+          required
+        >
 
         <label>Password</label>
-        <input id="login-password" type="password" required>
+        <input
+          id="login-password"
+          type="password"
+          required
+        >
 
-        <button type="submit">AUTHENTICATE</button>
+        <button type="submit">
+          LOGIN
+        </button>
+
       </form>
 
-      <p id="login-error" class="danger hidden"></p>
+      <div id="login-error" class="hidden"></div>
+
     </div>
 
+    <!-- DASHBOARD -->
     <div id="admin-dashboard" class="hidden">
 
       <div class="panel">
-        <h2>ADMIN DASHBOARD</h2>
+
+        <h2>ADMINISTRATOR CONTROL PANEL</h2>
+
         <p>
           Logged in as:
           <strong id="admin-email"></strong>
         </p>
 
-        <button id="logout-button">LOG OUT</button>
+        <button id="logout-button">
+          LOGOUT
+        </button>
+
       </div>
 
       <!-- PERSONNEL ADMIN -->
       <div class="panel">
-        <h2>ADD PERSONNEL</h2>
+
+        <h2>PERSONNEL MANAGEMENT</h2>
 
         <form id="personnel-admin-form">
 
           <div class="form-grid">
+
             <div>
               <label>Name</label>
               <input id="admin-personnel-name" required>
@@ -372,46 +470,54 @@
 
             <div>
               <label>Rank</label>
-              <input id="admin-personnel-rank">
+              <input id="admin-personnel-rank" required>
             </div>
 
             <div>
               <label>Clearance</label>
-              <input id="admin-personnel-clearance">
+              <input id="admin-personnel-clearance" required>
             </div>
 
             <div>
               <label>Department</label>
-              <input id="admin-personnel-department">
+              <input id="admin-personnel-department" required>
             </div>
 
             <div>
               <label>Tests Conducted</label>
-              <input id="admin-personnel-tests" type="number" value="0">
+              <input id="admin-personnel-tests" required>
             </div>
 
             <div>
               <label>Status</label>
-              <input id="admin-personnel-status">
+              <input id="admin-personnel-status" required>
             </div>
+
           </div>
 
-          <button class="success-button" type="submit">ADD PERSONNEL</button>
+          <button type="submit">
+            ADD PERSONNEL
+          </button>
+
         </form>
 
-        <h3>PERSONNEL DATABASE</h3>
+        <hr>
+
         <div id="admin-personnel-list"></div>
+
       </div>
 
       <!-- SCP ADMIN -->
       <div class="panel">
-        <h2>ADD SCP</h2>
+
+        <h2>SCP MANAGEMENT</h2>
 
         <form id="scp-admin-form">
 
           <div class="form-grid">
+
             <div>
-              <label>SCP Number</label>
+              <label>Number</label>
               <input id="admin-scp-number" required>
             </div>
 
@@ -422,42 +528,52 @@
 
             <div>
               <label>Object Class</label>
-              <input id="admin-scp-class">
+              <input id="admin-scp-class" required>
             </div>
 
             <div>
               <label>Risk Class</label>
-              <input id="admin-scp-risk">
+              <input id="admin-scp-risk" required>
             </div>
 
             <div>
               <label>Containment Zone</label>
-              <input id="admin-scp-zone">
+              <input id="admin-scp-zone" required>
             </div>
 
             <div>
               <label>Clearance</label>
-              <input id="admin-scp-clearance">
+              <input id="admin-scp-clearance" required>
             </div>
+
+            <div class="full">
+              <label>Description</label>
+              <textarea id="admin-scp-description" required></textarea>
+            </div>
+
           </div>
 
-          <label>Description</label>
-          <textarea id="admin-scp-description"></textarea>
+          <button type="submit">
+            ADD SCP
+          </button>
 
-          <button class="success-button" type="submit">ADD SCP</button>
         </form>
 
-        <h3>SCP DATABASE</h3>
+        <hr>
+
         <div id="admin-scp-list"></div>
+
       </div>
 
       <!-- TEST ADMIN -->
       <div class="panel">
-        <h2>ADD TEST REPORT</h2>
+
+        <h2>TEST REPORT MANAGEMENT</h2>
 
         <form id="test-admin-form">
 
           <div class="form-grid">
+
             <div>
               <label>Test Number</label>
               <input id="admin-test-number" required>
@@ -465,132 +581,175 @@
 
             <div>
               <label>Date</label>
-              <input id="admin-test-date" type="date">
+              <input id="admin-test-date" required>
             </div>
 
             <div>
               <label>Scientist</label>
-              <input id="admin-test-scientist">
+              <input id="admin-test-scientist" required>
             </div>
 
             <div>
               <label>Clearance</label>
-              <input id="admin-test-clearance">
+              <input id="admin-test-clearance" required>
             </div>
 
             <div>
               <label>SCP</label>
-              <input id="admin-test-scp">
+              <input id="admin-test-scp" required>
             </div>
 
             <div>
               <label>Outcome</label>
-              <input id="admin-test-outcome">
+              <input id="admin-test-outcome" required>
             </div>
+
+            <div class="full">
+              <label>Question</label>
+              <textarea id="admin-test-question" required></textarea>
+            </div>
+
+            <div class="full">
+              <label>Hypothesis</label>
+              <textarea id="admin-test-hypothesis" required></textarea>
+            </div>
+
+            <div class="full">
+              <label>Test Log</label>
+              <textarea id="admin-test-log" required></textarea>
+            </div>
+
+            <div class="full">
+              <label>Results</label>
+              <textarea id="admin-test-results" required></textarea>
+            </div>
+
+            <div class="full">
+              <label>Research Notes</label>
+              <textarea id="admin-test-research"></textarea>
+            </div>
+
+            <div class="full">
+              <label>Conclusion</label>
+              <textarea id="admin-test-conclusion"></textarea>
+            </div>
+
+            <div class="full">
+              <label>Scientist Note</label>
+              <textarea id="admin-test-note"></textarea>
+            </div>
+
+            <div>
+              <label>Casualties</label>
+              <input id="admin-test-casualties">
+            </div>
+
+            <div>
+              <label>Follow Up</label>
+              <input id="admin-test-followup">
+            </div>
+
           </div>
 
-          <label>Question</label>
-          <textarea id="admin-test-question"></textarea>
+          <button type="submit">
+            ADD TEST REPORT
+          </button>
 
-          <label>Hypothesis</label>
-          <textarea id="admin-test-hypothesis"></textarea>
-
-          <label>Test Log</label>
-          <textarea id="admin-test-log"></textarea>
-
-          <label>Results</label>
-          <textarea id="admin-test-results"></textarea>
-
-          <label>Research Notes</label>
-          <textarea id="admin-test-research"></textarea>
-
-          <label>Conclusion</label>
-          <textarea id="admin-test-conclusion"></textarea>
-
-          <label>Scientist Note</label>
-          <textarea id="admin-test-note"></textarea>
-
-          <label>Casualties</label>
-          <textarea id="admin-test-casualties"></textarea>
-
-          <label>Follow Up</label>
-          <textarea id="admin-test-followup"></textarea>
-
-          <button class="success-button" type="submit">ADD TEST REPORT</button>
         </form>
 
-        <h3>TEST DATABASE</h3>
+        <hr>
+
         <div id="admin-test-list"></div>
+
       </div>
 
       <!-- INCIDENT ADMIN -->
       <div class="panel">
-        <h2>ADD INCIDENT</h2>
+
+        <h2>INCIDENT MANAGEMENT</h2>
 
         <form id="incident-admin-form">
 
           <div class="form-grid">
+
             <div>
               <label>Incident ID</label>
-              <input id="admin-incident-id">
+              <input id="admin-incident-id" required>
             </div>
 
             <div>
               <label>Title</label>
-              <input id="admin-incident-title">
+              <input id="admin-incident-title" required>
             </div>
 
             <div>
               <label>Date</label>
-              <input id="admin-incident-date">
+              <input id="admin-incident-date" required>
             </div>
 
             <div>
               <label>Location</label>
-              <input id="admin-incident-location">
+              <input id="admin-incident-location" required>
             </div>
 
             <div>
               <label>SCP</label>
-              <input id="admin-incident-scp">
+              <input id="admin-incident-scp" required>
             </div>
 
             <div>
               <label>Status</label>
-              <input id="admin-incident-status">
+              <input id="admin-incident-status" required>
             </div>
+
+            <div class="full">
+              <label>Summary</label>
+              <textarea id="admin-incident-summary" required></textarea>
+            </div>
+
+            <div class="full">
+              <label>Personnel Involved</label>
+              <textarea id="admin-incident-personnel"></textarea>
+            </div>
+
+            <div class="full">
+              <label>Casualties</label>
+              <textarea id="admin-incident-casualties"></textarea>
+            </div>
+
+            <div class="full">
+              <label>Resolution</label>
+              <textarea id="admin-incident-resolution"></textarea>
+            </div>
+
           </div>
 
-          <label>Summary</label>
-          <textarea id="admin-incident-summary"></textarea>
+          <button type="submit">
+            ADD INCIDENT
+          </button>
 
-          <label>Personnel Involved</label>
-          <textarea id="admin-incident-personnel"></textarea>
-
-          <label>Casualties</label>
-          <textarea id="admin-incident-casualties"></textarea>
-
-          <label>Resolution</label>
-          <textarea id="admin-incident-resolution"></textarea>
-
-          <button class="success-button" type="submit">ADD INCIDENT</button>
         </form>
 
-        <h3>INCIDENT DATABASE</h3>
+        <hr>
+
         <div id="admin-incident-list"></div>
+
       </div>
 
     </div>
+
   </section>
 
 </main>
 
-<!-- REPORT POPUP -->
-<div id="report-overlay" class="overlay">
+<!-- REPORT OVERLAY -->
+<div id="report-overlay">
 
-  <div class="report">
+  <div id="report-window">
 
-    <button id="report-close">CLOSE X</button>
+    <button id="report-close">
+      CLOSE
+    </button>
 
     <div id="report-content"></div>
 
@@ -598,14 +757,10 @@
 
 </div>
 
-<footer>
-  SCD SCIENTIFIC DATABASE // FOUNDATION INTERNAL ARCHIVE
-</footer>
-
 <!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- YOUR JAVASCRIPT -->
+<!-- YOUR SCRIPT -->
 <script src="script.js"></script>
 
 </body>
