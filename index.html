@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -12,470 +10,538 @@
 
   <title>SCD Scientific Database</title>
 
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-
-    /* ==================================================
-       THEME SYSTEM
-       ================================================== */
-
-    :root {
-
-      --bg: #0b0d0f;
-      --panel: #111419;
-      --panel2: #15191e;
-
-      --text: #e7e7e7;
-      --muted: #999;
-
-      --border: #30343a;
-
-      --accent: #d9d9d9;
-
-      --input: #0d1013;
-
+    * {
+      box-sizing: border-box;
     }
-
-
-    body.light-mode {
-
-      --bg: #f4f4f4;
-      --panel: #ffffff;
-      --panel2: #eeeeee;
-
-      --text: #171717;
-      --muted: #555;
-
-      --border: #c9c9c9;
-
-      --accent: #111;
-
-      --input: #ffffff;
-
-    }
-
 
     body {
-
-      background: var(--bg);
-
-      color: var(--text);
-
-      transition:
-        background 0.2s ease,
-        color 0.2s ease;
-
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f4f4;
+      color: #111;
     }
 
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
 
-    /* ==================================================
-       THEME BUTTON
-       ================================================== */
+    button {
+      cursor: pointer;
+    }
 
-    .theme-switcher {
+    .site-header {
+      border-bottom: 2px solid #111;
+      background: #fff;
+    }
 
-      position: fixed;
-
-      top: 15px;
-
-      right: 15px;
-
-      z-index: 10000;
-
+    .header-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 28px 20px;
       display: flex;
-
-      gap: 5px;
-
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
     }
 
+    .department {
+      font-size: 12px;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
 
-    .theme-switcher button {
+    h1 {
+      margin: 6px 0;
+      font-size: 30px;
+      letter-spacing: 1px;
+    }
 
-      background: var(--panel);
-
-      color: var(--text);
-
-      border: 1px solid var(--border);
-
-      padding: 7px 10px;
-
+    .classification {
       font-size: 11px;
+      letter-spacing: 1px;
+      opacity: .65;
+    }
 
+    .status {
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .status span {
+      color: #16833b;
+    }
+
+    .nav {
+      border-bottom: 1px solid #ccc;
+      background: #fff;
+      overflow-x: auto;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      padding: 0 20px;
+    }
+
+    .nav-button {
+      border: 0;
+      background: transparent;
+      padding: 16px 18px;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: .5px;
+      border-bottom: 3px solid transparent;
+    }
+
+    .nav-button:hover,
+    .nav-button.active {
+      border-bottom-color: #111;
+      background: #f1f1f1;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 30px 20px 60px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .page-title {
+      margin-bottom: 25px;
+    }
+
+    .page-title h2 {
+      margin: 0 0 6px;
+      font-size: 24px;
+    }
+
+    .page-title p {
+      margin: 0;
+      color: #666;
+    }
+
+    .notice {
+      border-left: 4px solid #111;
+      background: #fff;
+      padding: 16px;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .stat {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 20px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .stat span {
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: #666;
+    }
+
+    .grid-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .panel-title {
+      font-weight: bold;
+      font-size: 12px;
+      letter-spacing: 1px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 12px;
+      margin-bottom: 15px;
+    }
+
+    .compact-record {
+      padding: 13px 0;
+      border-bottom: 1px solid #eee;
+      display: grid;
+      gap: 4px;
+    }
+
+    .compact-record:last-child {
+      border-bottom: 0;
+    }
+
+    .compact-record b {
+      font-size: 12px;
+    }
+
+    .compact-record span {
+      color: #444;
+    }
+
+    .compact-record small {
+      color: #16833b;
+      font-weight: bold;
+    }
+
+    .toolbar {
+      margin-bottom: 20px;
+    }
+
+    .toolbar input {
+      width: 100%;
+      max-width: 600px;
+      padding: 13px;
+      border: 1px solid #bbb;
+      background: #fff;
+    }
+
+    .record-list {
+      display: grid;
+      gap: 15px;
+    }
+
+    .record {
+      background: #fff;
+      border: 1px solid #d8d8d8;
+      padding: 20px;
+    }
+
+    .record.clickable {
       cursor: pointer;
-
     }
 
-
-    .theme-switcher button:hover {
-
-      border-color: var(--text);
-
+    .record.clickable:hover {
+      border-color: #111;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
     }
 
-
-    /* ==================================================
-       TEST / INCIDENT CLICKING
-       ================================================== */
-
-    .test-card,
-    .incident-card {
-
-      cursor: pointer;
-
-      transition:
-        transform 0.15s ease,
-        border-color 0.15s ease;
-
+    .record-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: flex-start;
     }
 
-
-    .test-card:hover,
-    .incident-card:hover {
-
-      transform: translateY(-2px);
-
-      border-color: var(--text);
-
+    .record-head h3 {
+      margin: 0;
+      font-size: 17px;
     }
 
+    .tag {
+      display: inline-block;
+      border: 1px solid #aaa;
+      padding: 5px 8px;
+      font-size: 10px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .meta {
+      color: #666;
+      font-size: 12px;
+      margin: 12px 0;
+      line-height: 1.6;
+    }
+
+    .record p {
+      line-height: 1.6;
+    }
+
+    .record-foot {
+      border-top: 1px solid #eee;
+      padding-top: 12px;
+      margin-top: 15px;
+      font-size: 12px;
+      color: #555;
+    }
 
     .click-hint {
-
-      margin-top: 14px;
-
-      padding-top: 10px;
-
-      border-top: 1px solid var(--border);
-
+      margin-top: 15px;
       font-size: 10px;
-
+      font-weight: bold;
       letter-spacing: 1px;
-
-      color: var(--muted);
-
+      color: #555;
     }
 
+    .empty {
+      background: #fff;
+      border: 1px dashed #bbb;
+      padding: 30px;
+      text-align: center;
+      color: #777;
+    }
 
-    /* ==================================================
-       FULL REPORT OVERLAY
-       ================================================== */
+    .error {
+      background: #fff0f0;
+      border: 1px solid #cc5555;
+      color: #900;
+      padding: 15px;
+      margin-top: 20px;
+    }
 
-    .report-overlay {
+    .hidden {
+      display: none !important;
+    }
 
+    /* REPORT OVERLAY */
+
+    #report-overlay {
       position: fixed;
-
       inset: 0;
-
-      z-index: 9000;
-
+      background: rgba(0,0,0,.65);
       display: none;
-
+      z-index: 1000;
       overflow-y: auto;
-
-      padding: 35px 20px;
-
-      box-sizing: border-box;
-
-      background: var(--bg);
-
+      padding: 30px 15px;
     }
 
-
-    .report-overlay.open {
-
+    #report-overlay.open {
       display: block;
-
     }
 
-
-    .report-page {
-
-      width: min(950px, 100%);
-
-      margin: 0 auto;
-
-      background: var(--bg);
-
-      color: var(--text);
-
-      border: 1px solid var(--border);
-
+    .report-window {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      min-height: 300px;
+      position: relative;
       padding: 35px;
-
-      box-sizing: border-box;
-
     }
-
 
     .report-close {
-
-      position: fixed;
-
-      top: 15px;
-
-      right: 20px;
-
-      z-index: 9100;
-
-      width: 40px;
-
-      height: 40px;
-
-      background: var(--bg);
-
-      color: var(--text);
-
-      border: 1px solid var(--border);
-
-      font-size: 25px;
-
-      cursor: pointer;
-
+      position: absolute;
+      top: 12px;
+      right: 15px;
+      border: 0;
+      background: transparent;
+      font-size: 30px;
+      line-height: 1;
     }
-
-
-    .report-close:hover {
-
-      border-color: var(--text);
-
-    }
-
 
     .report-header {
-
       display: flex;
-
       justify-content: space-between;
-
-      align-items: flex-start;
-
       gap: 20px;
-
+      border-bottom: 2px solid #111;
       padding-bottom: 20px;
-
-      border-bottom: 1px solid var(--border);
-
+      margin-bottom: 20px;
     }
-
 
     .report-header h2 {
-
-      margin: 5px 0 0;
-
+      margin: 6px 0 0;
     }
-
 
     .report-meta {
-
       display: flex;
-
       flex-wrap: wrap;
-
       gap: 20px;
-
-      padding: 15px 0;
-
-      border-bottom: 1px solid var(--border);
-
-      font-size: 13px;
-
-      color: var(--muted);
-
+      padding: 15px;
+      background: #f5f5f5;
+      margin-bottom: 25px;
     }
-
 
     .report-section {
-
-      margin-top: 28px;
-
+      margin: 25px 0;
     }
-
 
     .report-section h3 {
-
-      margin: 0 0 10px;
-
       font-size: 12px;
-
-      letter-spacing: 1.5px;
-
-      color: var(--muted);
-
+      letter-spacing: 1px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 8px;
     }
 
-
-    .report-section p {
-
-      margin: 0;
-
-      line-height: 1.75;
-
+    .report-section p,
+    .report-log {
+      line-height: 1.7;
       white-space: pre-wrap;
-
-      color: var(--text);
-
     }
-
 
     .report-log {
-
-      padding: 16px;
-
-      background: var(--panel);
-
-      border: 1px solid var(--border);
-
-      line-height: 1.7;
-
-      white-space: pre-wrap;
-
-      color: var(--text);
-
+      background: #f5f5f5;
+      padding: 15px;
+      border-left: 3px solid #111;
     }
-
 
     .report-footer {
-
+      border-top: 1px solid #ddd;
+      padding-top: 15px;
       display: flex;
-
       flex-wrap: wrap;
-
       gap: 30px;
-
-      margin-top: 30px;
-
-      padding-top: 20px;
-
-      border-top: 1px solid var(--border);
-
     }
 
+    /* LOGIN */
 
-    /* ==================================================
-       DOCUMENT LINKS
-       ================================================== */
+    .login-box {
+      max-width: 450px;
+      margin: 50px auto;
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 30px;
+    }
 
-    .document-link {
+    .login-box h2 {
+      margin-top: 0;
+    }
 
-      display: inline-block;
+    .form-group {
+      margin-bottom: 15px;
+    }
 
-      margin-top: 12px;
-
-      padding: 9px 14px;
-
-      border: 1px solid var(--border);
-
-      color: var(--text);
-
-      text-decoration: none;
-
+    .form-group label {
+      display: block;
       font-size: 11px;
-
-      letter-spacing: 1px;
-
+      font-weight: bold;
+      margin-bottom: 6px;
     }
 
-
-    .document-link:hover {
-
-      border-color: var(--text);
-
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      border: 1px solid #bbb;
+      padding: 10px;
+      background: #fff;
     }
 
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
 
-    /* ==================================================
-       MOBILE
-       ================================================== */
+    .btn {
+      border: 1px solid #111;
+      background: #111;
+      color: #fff;
+      padding: 10px 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-    @media (max-width: 700px) {
+    .btn.secondary {
+      background: #fff;
+      color: #111;
+    }
 
-      .theme-switcher {
+    .btn.danger {
+      background: #900;
+      border-color: #900;
+    }
 
-        position: static;
+    .admin-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
 
-        justify-content: flex-end;
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
 
-        padding: 10px;
+    .admin-table th,
+    .admin-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+      font-size: 12px;
+      vertical-align: top;
+    }
 
+    .admin-table th {
+      background: #f1f1f1;
+    }
+
+    footer {
+      border-top: 1px solid #ccc;
+      padding: 20px;
+      text-align: center;
+      font-size: 11px;
+      color: #666;
+    }
+
+    @media (max-width: 800px) {
+      .header-inner {
+        display: block;
       }
 
-
-      .report-overlay {
-
-        padding: 15px;
-
+      .status {
+        margin-top: 15px;
       }
 
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
 
-      .report-page {
+      .grid-two {
+        grid-template-columns: 1fr;
+      }
 
+      .report-window {
         padding: 25px 18px;
-
       }
-
-
-      .report-header {
-
-        flex-direction: column;
-
-      }
-
-
-      .report-meta {
-
-        flex-direction: column;
-
-        gap: 8px;
-
-      }
-
     }
 
-  </style>
+    @media (max-width: 500px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
 
+      .record-head,
+      .report-header {
+        display: block;
+      }
+
+      .tag {
+        margin-top: 10px;
+      }
+    }
+  </style>
 </head>
 
-
 <body>
-
-
-  <!-- ==================================================
-       THEME BUTTONS
-       ================================================== -->
-
-  <div class="theme-switcher">
-
-    <button
-      id="dark-mode-button"
-      type="button"
-    >
-      ☾ BLACK
-    </button>
-
-    <button
-      id="light-mode-button"
-      type="button"
-    >
-      ☀ WHITE
-    </button>
-
-  </div>
-
-
-  <!-- ==================================================
-       HEADER
-       ================================================== -->
 
   <header class="site-header">
 
     <div class="header-inner">
 
       <div>
-
         <div class="department">
           SCIENTIFIC DEPARTMENT
         </div>
@@ -487,15 +553,11 @@
         <div class="classification">
           FOUNDATION INTERNAL USE ONLY
         </div>
-
       </div>
 
-
       <div class="status">
-
         SYSTEM STATUS:
         <span>ONLINE</span>
-
       </div>
 
     </div>
@@ -503,119 +565,72 @@
   </header>
 
 
-  <!-- ==================================================
-       NAVIGATION
-       ================================================== -->
-
   <nav class="nav">
 
-    <button
-      class="nav-button active"
-      data-section="home"
-    >
-      HOME
-    </button>
+    <div class="nav-inner">
 
+      <button class="nav-button active" data-section="home">
+        HOME
+      </button>
 
-    <button
-      class="nav-button"
-      data-section="scps"
-    >
-      SCP FILES
-    </button>
+      <button class="nav-button" data-section="scps">
+        SCP FILES
+      </button>
 
+      <button class="nav-button" data-section="tests">
+        TEST REPORTS
+      </button>
 
-    <button
-      class="nav-button"
-      data-section="tests"
-    >
-      TEST REPORTS
-    </button>
+      <button class="nav-button" data-section="incidents">
+        INCIDENTS
+      </button>
 
+      <button class="nav-button" data-section="personnel">
+        PERSONNEL
+      </button>
 
-    <button
-      class="nav-button"
-      data-section="incidents"
-    >
-      INCIDENTS
-    </button>
+      <button class="nav-button" data-section="documents">
+        DOCUMENTS
+      </button>
 
+      <button class="nav-button" data-section="admin">
+        ADMIN
+      </button>
 
-    <button
-      class="nav-button"
-      data-section="personnel"
-    >
-      PERSONNEL
-    </button>
-
-
-    <button
-      class="nav-button"
-      data-section="documents"
-    >
-      DOCUMENTS
-    </button>
+    </div>
 
   </nav>
 
 
-  <!-- ==================================================
-       MAIN
-       ================================================== -->
-
-  <main class="container">
-
+  <main>
 
     <!-- HOME -->
 
-    <section
-      id="home"
-      class="page active"
-    >
+    <section id="home" class="page active">
 
       <div class="page-title">
-
-        <h2>
-          DATABASE OVERVIEW
-        </h2>
-
-        <p>
-          Scientific Department research and testing archive.
-        </p>
-
+        <h2>DATABASE OVERVIEW</h2>
+        <p>Scientific Department research and testing archive.</p>
       </div>
-
 
       <div class="notice">
-
         <strong>NOTICE:</strong>
-
-        Information contained within this database may be restricted by clearance level.
-
-        Unauthorized distribution of Foundation research is prohibited.
-
+        Information contained within this database may be restricted by
+        clearance level. Unauthorized distribution of Foundation research
+        is prohibited.
       </div>
 
-
-      <div
-        class="stats"
-        id="stats"
-      ></div>
-
+      <div class="stats" id="stats"></div>
 
       <div class="grid-two">
 
-
         <div class="panel">
-
           <div class="panel-title">
             RECENT TEST REPORTS
           </div>
 
           <div id="recent-tests"></div>
-
         </div>
-
 
         <div class="panel">
 
@@ -623,44 +638,21 @@
             DATABASE STATUS
           </div>
 
-
           <div class="compact-record">
-
-            <b>
-              SYSTEM
-            </b>
-
-            <span>
-              Scientific Department Database
-            </span>
-
-            <small>
-              ONLINE
-            </small>
-
+            <b>SYSTEM</b>
+            <span>Scientific Department Database</span>
+            <small>ONLINE</small>
           </div>
 
-
           <div class="compact-record">
-
-            <b>
-              ARCHIVE
-            </b>
-
-            <span>
-              Test Reports / SCP Files / Incidents
-            </span>
-
-            <small>
-              ACTIVE
-            </small>
-
+            <b>ARCHIVE</b>
+            <span>Test Reports / SCP Files / Incidents</span>
+            <small>ACTIVE</small>
           </div>
 
         </div>
 
       </div>
-
 
       <div class="panel">
 
@@ -668,25 +660,17 @@
           DATABASE INFORMATION
         </div>
 
-
         <p>
-
-          This database contains records created by members
-          of the Scientific Department.
-
-          Test reports, incident reports, SCP files and
-          personnel records are archived here for internal reference.
-
+          This database contains records created by members of the
+          Scientific Department. Test reports, incident reports, SCP
+          files and personnel records are archived here for internal
+          reference.
         </p>
 
-
         <p>
-
-          Research notes are attached directly to their
-          corresponding test reports.
-
-          Select a test report to view the complete experiment record.
-
+          Research notes are attached directly to their corresponding
+          test reports. Select a test report or SCP file to view the
+          complete record.
         </p>
 
       </div>
@@ -696,23 +680,17 @@
 
     <!-- SCP FILES -->
 
-    <section
-      id="scps"
-      class="page"
-    >
+    <section id="scps" class="page">
 
       <div class="page-title">
 
-        <h2>
-          SCP FILES
-        </h2>
+        <h2>SCP FILES</h2>
 
         <p>
           Known anomalies and associated research information.
         </p>
 
       </div>
-
 
       <div class="toolbar">
 
@@ -724,7 +702,6 @@
 
       </div>
 
-
       <div
         id="scp-list"
         class="record-list"
@@ -735,23 +712,17 @@
 
     <!-- TEST REPORTS -->
 
-    <section
-      id="tests"
-      class="page"
-    >
+    <section id="tests" class="page">
 
       <div class="page-title">
 
-        <h2>
-          TEST REPORTS
-        </h2>
+        <h2>TEST REPORTS</h2>
 
         <p>
           Scientific Department experiment archive.
         </p>
 
       </div>
-
 
       <div class="toolbar">
 
@@ -763,7 +734,6 @@
 
       </div>
 
-
       <div
         id="test-list"
         class="record-list"
@@ -774,23 +744,17 @@
 
     <!-- INCIDENTS -->
 
-    <section
-      id="incidents"
-      class="page"
-    >
+    <section id="incidents" class="page">
 
       <div class="page-title">
 
-        <h2>
-          INCIDENT REPORTS
-        </h2>
+        <h2>INCIDENT REPORTS</h2>
 
         <p>
           Archived containment and research incidents.
         </p>
 
       </div>
-
 
       <div
         id="incident-list"
@@ -802,23 +766,17 @@
 
     <!-- PERSONNEL -->
 
-    <section
-      id="personnel"
-      class="page"
-    >
+    <section id="personnel" class="page">
 
       <div class="page-title">
 
-        <h2>
-          PERSONNEL
-        </h2>
+        <h2>PERSONNEL</h2>
 
         <p>
           Scientific Department personnel records.
         </p>
 
       </div>
-
 
       <div
         id="personnel-list"
@@ -830,23 +788,17 @@
 
     <!-- DOCUMENTS -->
 
-    <section
-      id="documents"
-      class="page"
-    >
+    <section id="documents" class="page">
 
       <div class="page-title">
 
-        <h2>
-          DOCUMENTS
-        </h2>
+        <h2>DOCUMENTS</h2>
 
         <p>
           Scientific Department reference documents.
         </p>
 
       </div>
-
 
       <div
         id="document-list"
@@ -856,44 +808,171 @@
     </section>
 
 
+    <!-- ADMIN -->
+
+    <section id="admin" class="page">
+
+      <div id="admin-login">
+
+        <div class="login-box">
+
+          <div class="classification">
+            FOUNDATION SECURE ACCESS
+          </div>
+
+          <h2>ADMIN LOGIN</h2>
+
+          <p>
+            Authorized personnel only.
+          </p>
+
+          <form id="login-form">
+
+            <div class="form-group">
+
+              <label for="login-email">
+                EMAIL
+              </label>
+
+              <input
+                id="login-email"
+                type="email"
+                required
+                autocomplete="email"
+              >
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="login-password">
+                PASSWORD
+              </label>
+
+              <input
+                id="login-password"
+                type="password"
+                required
+                autocomplete="current-password"
+              >
+
+            </div>
+
+            <button
+              class="btn"
+              type="submit"
+            >
+              LOGIN
+            </button>
+
+          </form>
+
+          <div
+            id="login-error"
+            class="error hidden"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="admin-panel"
+        class="hidden"
+      >
+
+        <div class="page-title">
+
+          <h2>ADMIN PANEL</h2>
+
+          <p>
+            Authorized database management.
+          </p>
+
+        </div>
+
+        <div class="panel">
+
+          <div class="admin-actions">
+
+            <button
+              class="btn"
+              onclick="adminNew('personnel')"
+            >
+              + PERSONNEL
+            </button>
+
+            <button
+              class="btn"
+              onclick="adminNew('scps')"
+            >
+              + SCP
+            </button>
+
+            <button
+              class="btn"
+              onclick="adminNew('tests')"
+            >
+              + TEST
+            </button>
+
+            <button
+              class="btn"
+              onclick="adminNew('incidents')"
+            >
+              + INCIDENT
+            </button>
+
+            <button
+              class="btn secondary"
+              onclick="logout()"
+            >
+              LOGOUT
+            </button>
+
+          </div>
+
+          <div id="admin-content"></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
     <div
       id="error"
       class="error hidden"
     ></div>
 
-
   </main>
 
 
-  <!-- ==================================================
-       FULL REPORT VIEW
-       ================================================== -->
+  <!-- REPORT / SCP OVERLAY -->
 
-  <div
-    id="report-overlay"
-    class="report-overlay"
-  >
+  <div id="report-overlay">
 
-    <button
-      id="report-close"
-      class="report-close"
-      type="button"
-    >
-      ×
-    </button>
+    <div class="report-window">
 
+      <button
+        id="report-close"
+        class="report-close"
+        type="button"
+      >
+        ×
+      </button>
 
-    <div
-      id="report-content"
-      class="report-page"
-    ></div>
+      <div
+        id="report-content"
+        class="report-page"
+      ></div>
+
+    </div>
 
   </div>
 
-
-  <!-- ==================================================
-       FOOTER
-       ================================================== -->
 
   <footer>
 
@@ -908,11 +987,33 @@
 
   <script>
 
+    /* ==================================================
+       SUPABASE
+       ================================================== */
+
+    const SUPABASE_URL =
+      "https://hytqegmmwlvnyeraytec.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_PjiITaK5ILnagliukxereA_9fhwO-jO";
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
 
     /* ==================================================
-       DATABASE STATE
+       ADMIN SECURITY
+       ================================================== */
 
-       NO research.json
+    const ADMIN_UID =
+      "1da022eb-e2cc-47a7-bf2a-a1762c638467";
+
+
+    /* ==================================================
+       STATE
        ================================================== */
 
     const state = {
@@ -931,44 +1032,143 @@
 
 
     /* ==================================================
-       LOAD JSON FILES
+       SECURITY
+       ================================================== */
+
+    function escapeHTML(value) {
+
+      return String(value ?? "")
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+
+    }
+
+
+    function empty(message) {
+
+      return `
+        <div class="empty">
+          ${escapeHTML(message)}
+        </div>
+      `;
+
+    }
+
+
+    function showError(message) {
+
+      const box =
+        document.getElementById("error");
+
+      box.classList.remove("hidden");
+
+      box.textContent =
+        "DATABASE ERROR: " + message;
+
+    }
+
+
+    /* ==================================================
+       LOAD SUPABASE DATA
        ================================================== */
 
     async function loadData() {
 
-      const files =
-        Object.keys(state);
-
-
       try {
 
-        await Promise.all(
+        const [
+          scpsResult,
+          testsResult,
+          incidentsResult,
+          personnelResult
+        ] = await Promise.all([
 
-          files.map(
-            async file => {
+          supabaseClient
+            .from("scps")
+            .select("*")
+            .order("id", { ascending: true }),
 
-              const response =
-                await fetch(
-                  `data/${file}.json`
-                );
+          supabaseClient
+            .from("tests")
+            .select("*")
+            .order("id", { ascending: true }),
+
+          supabaseClient
+            .from("incidents")
+            .select("*")
+            .order("id", { ascending: true }),
+
+          supabaseClient
+            .from("personnel")
+            .select("*")
+            .order("id", { ascending: true })
+
+        ]);
 
 
-              if (!response.ok) {
+        if (scpsResult.error)
+          throw scpsResult.error;
 
-                throw new Error(
-                  `Could not load data/${file}.json`
-                );
+        if (testsResult.error)
+          throw testsResult.error;
 
-              }
+        if (incidentsResult.error)
+          throw incidentsResult.error;
+
+        if (personnelResult.error)
+          throw personnelResult.error;
 
 
-              state[file] =
-                await response.json();
+        state.scps =
+          scpsResult.data || [];
 
-            }
-          )
+        state.tests =
+          testsResult.data || [];
 
-        );
+        state.incidents =
+          incidentsResult.data || [];
+
+        state.personnel =
+          personnelResult.data || [];
+
+
+        /*
+          Documents stay as Google Doc links.
+          If you already have a documents table,
+          this will load it. If not, documents simply
+          remains empty.
+        */
+
+        try {
+
+          const documentsResult =
+            await supabaseClient
+              .from("documents")
+              .select("*")
+              .order("id", { ascending: true });
+
+
+          if (!documentsResult.error) {
+
+            state.documents =
+              documentsResult.data || [];
+
+          }
+
+        }
+        catch (_) {
+
+          state.documents = [];
+
+        }
 
 
         renderAll();
@@ -978,68 +1178,17 @@
           .getElementById("updated")
           .textContent =
             " | DATABASE LOADED: " +
-            new Date()
-              .toLocaleDateString();
+            new Date().toLocaleDateString();
 
 
       }
-
       catch (error) {
 
-        const box =
-          document.getElementById(
-            "error"
-          );
+        showError(error.message);
 
-
-        box.classList.remove(
-          "hidden"
-        );
-
-
-        box.textContent =
-          "DATABASE ERROR: " +
-          error.message;
+        console.error(error);
 
       }
-
-    }
-
-
-    /* ==================================================
-       SECURITY
-       ================================================== */
-
-    function escapeHTML(value) {
-
-      return String(
-        value ?? ""
-      )
-
-        .replaceAll(
-          "&",
-          "&amp;"
-        )
-
-        .replaceAll(
-          "<",
-          "&lt;"
-        )
-
-        .replaceAll(
-          ">",
-          "&gt;"
-        )
-
-        .replaceAll(
-          '"',
-          "&quot;"
-        )
-
-        .replaceAll(
-          "'",
-          "&#039;"
-        );
 
     }
 
@@ -1078,54 +1227,23 @@
         .innerHTML = `
 
           <div class="stat">
-
-            <strong>
-              ${state.scps.length}
-            </strong>
-
-            <span>
-              SCP FILES
-            </span>
-
+            <strong>${state.scps.length}</strong>
+            <span>SCP FILES</span>
           </div>
 
-
           <div class="stat">
-
-            <strong>
-              ${state.tests.length}
-            </strong>
-
-            <span>
-              TEST REPORTS
-            </span>
-
+            <strong>${state.tests.length}</strong>
+            <span>TEST REPORTS</span>
           </div>
 
-
           <div class="stat">
-
-            <strong>
-              ${state.incidents.length}
-            </strong>
-
-            <span>
-              INCIDENTS
-            </span>
-
+            <strong>${state.incidents.length}</strong>
+            <span>INCIDENTS</span>
           </div>
 
-
           <div class="stat">
-
-            <strong>
-              ${state.personnel.length}
-            </strong>
-
-            <span>
-              PERSONNEL
-            </span>
-
+            <strong>${state.personnel.length}</strong>
+            <span>PERSONNEL</span>
           </div>
 
         `;
@@ -1146,19 +1264,15 @@
 
 
       document
-        .getElementById(
-          "recent-tests"
-        )
+        .getElementById("recent-tests")
         .innerHTML =
 
-          tests.length
+        tests.length
 
           ?
 
           tests
-            .map(
-              testCompact
-            )
+            .map(testCompact)
             .join("")
 
           :
@@ -1179,46 +1293,24 @@
       return `
 
         <div
-          class="compact-record test-card"
+          class="compact-record clickable"
           onclick="openTest(${index})"
         >
 
           <b>
-
-            ${escapeHTML(
-              t.test_number
-            )}
-
+            ${escapeHTML(t.test_number)}
           </b>
 
-
           <span>
-
-            ${escapeHTML(
-              t.scp
-            )}
-
+            ${escapeHTML(t.scp)}
             —
-
-            ${escapeHTML(
-              t.scientist
-            )}
-
+            ${escapeHTML(t.scientist)}
           </span>
 
-
           <small>
-
-            ${escapeHTML(
-              t.date
-            )}
-
+            ${escapeHTML(t.date)}
             |
-
-            ${escapeHTML(
-              t.outcome
-            )}
-
+            ${escapeHTML(t.outcome)}
           </small>
 
         </div>
@@ -1232,49 +1324,35 @@
        SCP FILES
        ================================================== */
 
-    function renderSCPs(
-      filter = ""
-    ) {
+    function renderSCPs(filter = "") {
 
       const q =
         filter.toLowerCase();
 
 
       const records =
-        state.scps.filter(
-          s =>
+        state.scps.filter(s => `
 
-            `
+          ${s.number}
+          ${s.name}
+          ${s.object_class}
+          ${s.risk_class}
+          ${s.containment_zone}
+          ${s.description}
 
-              ${s.number}
-
-              ${s.name}
-
-              ${s.object_class}
-
-            `
-
-            .toLowerCase()
-
-            .includes(q)
-
-        );
+        `.toLowerCase().includes(q));
 
 
       document
-        .getElementById(
-          "scp-list"
-        )
+        .getElementById("scp-list")
         .innerHTML =
 
-          records.length
+        records.length
 
           ?
 
           records
-            .map(
-              scpCard
-            )
+            .map(scpCard)
             .join("")
 
           :
@@ -1288,34 +1366,29 @@
 
     function scpCard(s) {
 
+      const index =
+        state.scps.indexOf(s);
+
+
       return `
 
-        <article class="record">
-
+        <article
+          class="record clickable"
+          onclick="openSCP(${index})"
+        >
 
           <div class="record-head">
 
             <h3>
 
-              ${escapeHTML(
-                s.number
-              )}
-
+              ${escapeHTML(s.number)}
               —
-
-              ${escapeHTML(
-                s.name
-              )}
+              ${escapeHTML(s.name)}
 
             </h3>
 
-
             <span class="tag">
-
-              ${escapeHTML(
-                s.object_class
-              )}
-
+              ${escapeHTML(s.object_class)}
             </span>
 
           </div>
@@ -1324,25 +1397,19 @@
           <div class="meta">
 
             Risk:
-            ${escapeHTML(
-              s.risk_class
-            )}
+            ${escapeHTML(s.risk_class)}
 
             |
 
             Zone:
-            ${escapeHTML(
-              s.containment_zone
-            )}
+            ${escapeHTML(s.containment_zone)}
 
           </div>
 
 
           <p>
 
-            ${escapeHTML(
-              s.description
-            )}
+            ${escapeHTML(s.description)}
 
           </p>
 
@@ -1351,12 +1418,14 @@
 
             Clearance:
             Level
-            ${escapeHTML(
-              s.clearance
-            )}
+            ${escapeHTML(s.clearance)}
 
           </div>
 
+
+          <div class="click-hint">
+            CLICK TO VIEW FULL SCP FILE
+          </div>
 
         </article>
 
@@ -1366,55 +1435,179 @@
 
 
     /* ==================================================
+       OPEN SCP
+       ================================================== */
+
+    function openSCP(index) {
+
+      const s =
+        state.scps[index];
+
+
+      if (!s) return;
+
+
+      document
+        .getElementById("report-content")
+        .innerHTML = `
+
+          <div class="report-header">
+
+            <div>
+
+              <div class="classification">
+                SCIENTIFIC DEPARTMENT
+              </div>
+
+              <h2>
+
+                ${escapeHTML(s.number)}
+                —
+                ${escapeHTML(s.name)}
+
+              </h2>
+
+            </div>
+
+            <span class="tag">
+
+              ${escapeHTML(s.object_class)}
+
+            </span>
+
+          </div>
+
+
+          <div class="report-meta">
+
+            <span>
+
+              <strong>
+                Object Class:
+              </strong>
+
+              ${escapeHTML(s.object_class)}
+
+            </span>
+
+
+            <span>
+
+              <strong>
+                Risk:
+              </strong>
+
+              ${escapeHTML(s.risk_class)}
+
+            </span>
+
+
+            <span>
+
+              <strong>
+                Containment Zone:
+              </strong>
+
+              ${escapeHTML(s.containment_zone)}
+
+            </span>
+
+
+            <span>
+
+              <strong>
+                Clearance:
+              </strong>
+
+              Level
+              ${escapeHTML(s.clearance)}
+
+            </span>
+
+          </div>
+
+
+          <div class="report-section">
+
+            <h3>
+              DESCRIPTION
+            </h3>
+
+            <p>
+
+              ${escapeHTML(
+                s.description ||
+                "No description recorded."
+              )}
+
+            </p>
+
+          </div>
+
+
+          <div class="report-section">
+
+            <h3>
+              CONTAINMENT CLASSIFICATION
+            </h3>
+
+            <p>
+
+              Object Class:
+              ${escapeHTML(s.object_class)}
+
+              <br>
+
+              Risk Class:
+              ${escapeHTML(s.risk_class)}
+
+              <br>
+
+              Containment Zone:
+              ${escapeHTML(s.containment_zone)}
+
+            </p>
+
+          </div>
+
+        `;
+
+
+      openReport();
+
+    }
+
+
+    /* ==================================================
        TEST REPORTS
        ================================================== */
 
-    function renderTests(
-      filter = ""
-    ) {
+    function renderTests(filter = "") {
 
       const q =
         filter.toLowerCase();
 
 
       const records =
-        state.tests.filter(
-          t =>
+        state.tests.filter(t => `
 
-            `
+          ${t.test_number}
+          ${t.scp}
+          ${t.scientist}
+          ${t.question}
+          ${t.outcome}
+          ${t.results}
+          ${t.research_notes}
+          ${t.conclusion}
 
-              ${t.test_number}
-
-              ${t.scp}
-
-              ${t.scientist}
-
-              ${t.question}
-
-              ${t.outcome}
-
-              ${t.results}
-
-              ${t.research_notes}
-
-              ${t.conclusion}
-
-            `
-
-            .toLowerCase()
-
-            .includes(q)
-
-        );
+        `.toLowerCase().includes(q));
 
 
       document
-        .getElementById(
-          "test-list"
-        )
+        .getElementById("test-list")
         .innerHTML =
 
-          records.length
+        records.length
 
           ?
 
@@ -1437,41 +1630,28 @@
     }
 
 
-    function testCard(
-      t,
-      index
-    ) {
+    function testCard(t, index) {
 
       return `
 
         <article
-          class="record test-card"
+          class="record clickable"
           onclick="openTest(${index})"
         >
-
 
           <div class="record-head">
 
             <h3>
 
-              ${escapeHTML(
-                t.test_number
-              )}
-
+              ${escapeHTML(t.test_number)}
               —
-
-              ${escapeHTML(
-                t.scp
-              )}
+              ${escapeHTML(t.scp)}
 
             </h3>
 
-
             <span class="tag">
 
-              ${escapeHTML(
-                t.outcome
-              )}
+              ${escapeHTML(t.outcome)}
 
             </span>
 
@@ -1480,23 +1660,17 @@
 
           <div class="meta">
 
-            ${escapeHTML(
-              t.date
-            )}
+            ${escapeHTML(t.date)}
 
             |
 
             Scientist:
-            ${escapeHTML(
-              t.scientist
-            )}
+            ${escapeHTML(t.scientist)}
 
             |
 
             Clearance:
-            ${escapeHTML(
-              t.clearance
-            )}
+            ${escapeHTML(t.clearance)}
 
           </div>
 
@@ -1507,19 +1681,14 @@
               Question:
             </strong>
 
-            ${escapeHTML(
-              t.question
-            )}
+            ${escapeHTML(t.question)}
 
           </p>
 
 
           <div class="click-hint">
-
             CLICK TO VIEW FULL TEST REPORT
-
           </div>
-
 
         </article>
 
@@ -1529,7 +1698,7 @@
 
 
     /* ==================================================
-       OPEN TEST REPORT
+       OPEN TEST
        ================================================== */
 
     function openTest(index) {
@@ -1542,13 +1711,10 @@
 
 
       document
-        .getElementById(
-          "report-content"
-        )
+        .getElementById("report-content")
         .innerHTML = `
 
           <div class="report-header">
-
 
             <div>
 
@@ -1556,32 +1722,19 @@
                 SCIENTIFIC DEPARTMENT
               </div>
 
-
               <h2>
 
-                ${escapeHTML(
-                  t.test_number
-                )}
-
+                ${escapeHTML(t.test_number)}
                 —
-
-                ${escapeHTML(
-                  t.scp
-                )}
+                ${escapeHTML(t.scp)}
 
               </h2>
 
             </div>
 
-
             <span class="tag">
-
-              ${escapeHTML(
-                t.outcome
-              )}
-
+              ${escapeHTML(t.outcome)}
             </span>
-
 
           </div>
 
@@ -1589,160 +1742,45 @@
           <div class="report-meta">
 
             <span>
-
-              <strong>
-                Date:
-              </strong>
-
-              ${escapeHTML(
-                t.date
-              )}
-
+              <strong>Date:</strong>
+              ${escapeHTML(t.date)}
             </span>
-
 
             <span>
-
-              <strong>
-                Scientist:
-              </strong>
-
-              ${escapeHTML(
-                t.scientist
-              )}
-
+              <strong>Scientist:</strong>
+              ${escapeHTML(t.scientist)}
             </span>
-
 
             <span>
-
-              <strong>
-                Clearance:
-              </strong>
-
-              ${escapeHTML(
-                t.clearance
-              )}
-
+              <strong>Clearance:</strong>
+              ${escapeHTML(t.clearance)}
             </span>
 
           </div>
 
 
-          <div class="report-section">
+          ${reportSection("QUESTION", t.question)}
 
-            <h3>
-              QUESTION
-            </h3>
+          ${reportSection("HYPOTHESIS", t.hypothesis)}
 
-            <p>
-              ${escapeHTML(
-                t.question
-              )}
-            </p>
+          ${reportSection("TEST LOG", t.log, true)}
 
-          </div>
+          ${reportSection("RESULTS", t.results)}
 
+          ${reportSection(
+            "RESEARCH NOTES",
+            t.research_notes || "No research notes attached."
+          )}
 
-          <div class="report-section">
+          ${reportSection(
+            "CONCLUSION",
+            t.conclusion || "No conclusion recorded."
+          )}
 
-            <h3>
-              HYPOTHESIS
-            </h3>
-
-            <p>
-              ${escapeHTML(
-                t.hypothesis
-              )}
-            </p>
-
-          </div>
-
-
-          <div class="report-section">
-
-            <h3>
-              TEST LOG
-            </h3>
-
-            <div class="report-log">
-
-              ${escapeHTML(
-                t.log
-              )}
-
-            </div>
-
-          </div>
-
-
-          <div class="report-section">
-
-            <h3>
-              RESULTS
-            </h3>
-
-            <p>
-              ${escapeHTML(
-                t.results
-              )}
-            </p>
-
-          </div>
-
-
-          <div class="report-section">
-
-            <h3>
-              RESEARCH NOTES
-            </h3>
-
-            <p>
-
-              ${escapeHTML(
-                t.research_notes ||
-                "No research notes attached."
-              )}
-
-            </p>
-
-          </div>
-
-
-          <div class="report-section">
-
-            <h3>
-              CONCLUSION
-            </h3>
-
-            <p>
-
-              ${escapeHTML(
-                t.conclusion ||
-                "No conclusion recorded."
-              )}
-
-            </p>
-
-          </div>
-
-
-          <div class="report-section">
-
-            <h3>
-              SCIENTIST NOTE
-            </h3>
-
-            <p>
-
-              ${escapeHTML(
-                t.scientist_note ||
-                "No scientist note recorded."
-              )}
-
-            </p>
-
-          </div>
+          ${reportSection(
+            "SCIENTIST NOTE",
+            t.scientist_note || "No scientist note recorded."
+          )}
 
 
           <div class="report-footer">
@@ -1784,6 +1822,43 @@
     }
 
 
+    function reportSection(
+      title,
+      value,
+      log = false
+    ) {
+
+      return `
+
+        <div class="report-section">
+
+          <h3>
+            ${escapeHTML(title)}
+          </h3>
+
+          ${
+            log
+
+              ?
+
+              `<div class="report-log">
+                ${escapeHTML(value)}
+              </div>`
+
+              :
+
+              `<p>
+                ${escapeHTML(value || "No information recorded.")}
+              </p>`
+          }
+
+        </div>
+
+      `;
+
+    }
+
+
     /* ==================================================
        INCIDENTS
        ================================================== */
@@ -1791,111 +1866,103 @@
     function renderIncidents() {
 
       document
-        .getElementById(
-          "incident-list"
-        )
+        .getElementById("incident-list")
         .innerHTML =
 
-          state.incidents.length
+        state.incidents.length
 
           ?
 
           state.incidents
             .slice()
             .reverse()
-            .map(
-              (incident) => {
+            .map(incident => {
 
-                const index =
-                  state.incidents.indexOf(
-                    incident
-                  );
-
-
-                return `
-
-                  <article
-                    class="record incident-card"
-                    onclick="openIncident(${index})"
-                  >
+              const index =
+                state.incidents.indexOf(
+                  incident
+                );
 
 
-                    <div class="record-head">
+              return `
 
-                      <h3>
+                <article
+                  class="record clickable"
+                  onclick="openIncident(${index})"
+                >
 
-                        ${escapeHTML(
-                          incident.id
-                        )}
+                  <div class="record-head">
 
-                        —
-
-                        ${escapeHTML(
-                          incident.title
-                        )}
-
-                      </h3>
-
-
-                      <span class="tag">
-
-                        ${escapeHTML(
-                          incident.status
-                        )}
-
-                      </span>
-
-                    </div>
-
-
-                    <div class="meta">
+                    <h3>
 
                       ${escapeHTML(
-                        incident.date
+                        incident.incident_id ||
+                        incident.id
                       )}
 
-                      |
+                      —
 
                       ${escapeHTML(
-                        incident.location
+                        incident.title
                       )}
 
-                      |
+                    </h3>
 
-                      SCP:
-                      ${escapeHTML(
-                        incident.scp
-                      )}
-
-                    </div>
-
-
-                    <p>
-
-                      <strong>
-                        Summary:
-                      </strong>
+                    <span class="tag">
 
                       ${escapeHTML(
-                        incident.summary
+                        incident.status
                       )}
 
-                    </p>
+                    </span>
+
+                  </div>
 
 
-                    <div class="click-hint">
+                  <div class="meta">
 
-                      CLICK TO VIEW FULL INCIDENT REPORT
+                    ${escapeHTML(
+                      incident.date
+                    )}
 
-                    </div>
+                    |
+
+                    ${escapeHTML(
+                      incident.location
+                    )}
+
+                    |
+
+                    SCP:
+                    ${escapeHTML(
+                      incident.scp
+                    )}
+
+                  </div>
 
 
-                  </article>
+                  <p>
 
-                `;
+                    <strong>
+                      Summary:
+                    </strong>
 
-              }
-            )
+                    ${escapeHTML(
+                      incident.summary
+                    )}
+
+                  </p>
+
+
+                  <div class="click-hint">
+                    CLICK TO VIEW FULL INCIDENT REPORT
+                  </div>
+
+                </article>
+
+              `;
+
+            })
             .join("")
 
           :
@@ -1921,13 +1988,10 @@
 
 
       document
-        .getElementById(
-          "report-content"
-        )
+        .getElementById("report-content")
         .innerHTML = `
 
           <div class="report-header">
-
 
             <div>
 
@@ -1935,10 +1999,10 @@
                 SCIENTIFIC DEPARTMENT
               </div>
 
-
               <h2>
 
                 ${escapeHTML(
+                  i.incident_id ||
                   i.id
                 )}
 
@@ -1952,15 +2016,9 @@
 
             </div>
 
-
             <span class="tag">
-
-              ${escapeHTML(
-                i.status
-              )}
-
+              ${escapeHTML(i.status)}
             </span>
-
 
           </div>
 
@@ -1968,113 +2026,39 @@
           <div class="report-meta">
 
             <span>
-
-              <strong>
-                Date:
-              </strong>
-
-              ${escapeHTML(
-                i.date
-              )}
-
+              <strong>Date:</strong>
+              ${escapeHTML(i.date)}
             </span>
-
 
             <span>
-
-              <strong>
-                Location:
-              </strong>
-
-              ${escapeHTML(
-                i.location
-              )}
-
+              <strong>Location:</strong>
+              ${escapeHTML(i.location)}
             </span>
-
 
             <span>
-
-              <strong>
-                SCP:
-              </strong>
-
-              ${escapeHTML(
-                i.scp
-              )}
-
+              <strong>SCP:</strong>
+              ${escapeHTML(i.scp)}
             </span>
 
           </div>
 
 
-          <div class="report-section">
+          ${reportSection("SUMMARY", i.summary)}
 
-            <h3>
-              SUMMARY
-            </h3>
+          ${reportSection(
+            "PERSONNEL INVOLVED",
+            i.personnel
+          )}
 
-            <p>
+          ${reportSection(
+            "CASUALTIES",
+            i.casualties
+          )}
 
-              ${escapeHTML(
-                i.summary
-              )}
-
-            </p>
-
-          </div>
-
-
-          <div class="report-section">
-
-            <h3>
-              PERSONNEL INVOLVED
-            </h3>
-
-            <p>
-
-              ${escapeHTML(
-                i.personnel
-              )}
-
-            </p>
-
-          </div>
-
-
-          <div class="report-section">
-
-            <h3>
-              CASUALTIES
-            </h3>
-
-            <p>
-
-              ${escapeHTML(
-                i.casualties
-              )}
-
-            </p>
-
-          </div>
-
-
-          <div class="report-section">
-
-            <h3>
-              RESOLUTION
-            </h3>
-
-            <p>
-
-              ${escapeHTML(
-                i.resolution
-              )}
-
-            </p>
-
-          </div>
-
+          ${reportSection(
+            "RESOLUTION",
+            i.resolution
+          )}
 
         `;
 
@@ -2085,15 +2069,13 @@
 
 
     /* ==================================================
-       OPEN/CLOSE REPORT
+       OPEN / CLOSE REPORT
        ================================================== */
 
     function openReport() {
 
       document
-        .getElementById(
-          "report-overlay"
-        )
+        .getElementById("report-overlay")
         .classList
         .add("open");
 
@@ -2107,9 +2089,7 @@
     function closeReport() {
 
       document
-        .getElementById(
-          "report-overlay"
-        )
+        .getElementById("report-overlay")
         .classList
         .remove("open");
 
@@ -2127,88 +2107,63 @@
     function renderPersonnel() {
 
       document
-        .getElementById(
-          "personnel-list"
-        )
+        .getElementById("personnel-list")
         .innerHTML =
 
-          state.personnel.length
+        state.personnel.length
 
           ?
 
           state.personnel
-            .map(
-              p => `
+            .map(p => `
 
-                <article
-                  class="record personnel-record"
-                >
+              <article class="record">
 
+                <div class="record-head">
 
-                  <div class="record-head">
+                  <h3>
+                    ${escapeHTML(p.name)}
+                  </h3>
 
-                    <h3>
+                  <span class="tag">
 
-                      ${escapeHTML(
-                        p.name
-                      )}
+                    LEVEL
+                    ${escapeHTML(p.clearance)}
 
-                    </h3>
+                  </span>
 
-
-                    <span class="tag">
-
-                      LEVEL
-                      ${escapeHTML(
-                        p.clearance
-                      )}
-
-                    </span>
-
-                  </div>
+                </div>
 
 
-                  <div class="meta">
+                <div class="meta">
 
-                    ${escapeHTML(
-                      p.rank
-                    )}
+                  ${escapeHTML(p.rank)}
 
-                    |
+                  |
 
-                    ${escapeHTML(
-                      p.department
-                    )}
+                  ${escapeHTML(p.department)}
 
-                  </div>
+                </div>
 
 
-                  <p>
+                <p>
 
-                    Tests conducted:
+                  Tests conducted:
+                  ${escapeHTML(p.tests_conducted)}
 
-                    ${escapeHTML(
-                      p.tests_conducted
-                    )}
-
-                  </p>
+                </p>
 
 
-                  <p>
+                <p>
 
-                    Status:
+                  Status:
+                  ${escapeHTML(p.status)}
 
-                    ${escapeHTML(
-                      p.status
-                    )}
+                </p>
 
-                  </p>
+              </article>
 
-
-                </article>
-
-              `
-            )
+            `)
             .join("")
 
           :
@@ -2227,109 +2182,75 @@
     function renderDocuments() {
 
       document
-        .getElementById(
-          "document-list"
-        )
+        .getElementById("document-list")
         .innerHTML =
 
-          state.documents.length
+        state.documents.length
 
           ?
 
           state.documents
-            .map(
-              d => `
+            .map(d => `
 
-                <article class="record">
+              <article class="record">
 
+                <div class="record-head">
 
-                  <div class="record-head">
+                  <h3>
 
-                    <h3>
+                    ${escapeHTML(d.id)}
+                    —
+                    ${escapeHTML(d.title)}
 
-                      ${escapeHTML(
-                        d.id
-                      )}
+                  </h3>
 
-                      —
+                  <span class="tag">
+                    ${escapeHTML(d.type)}
+                  </span>
 
-                      ${escapeHTML(
-                        d.title
-                      )}
-
-                    </h3>
+                </div>
 
 
-                    <span class="tag">
+                <div class="meta">
 
-                      ${escapeHTML(
-                        d.type
-                      )}
+                  Clearance:
+                  ${escapeHTML(d.clearance)}
 
-                    </span>
+                  |
 
-                  </div>
+                  Updated:
+                  ${escapeHTML(d.updated)}
 
-
-                  <div class="meta">
-
-                    Clearance:
-
-                    ${escapeHTML(
-                      d.clearance
-                    )}
-
-                    |
-
-                    Updated:
-
-                    ${escapeHTML(
-                      d.updated
-                    )}
-
-                  </div>
+                </div>
 
 
-                  <p>
-
-                    ${escapeHTML(
-                      d.description
-                    )}
-
-                  </p>
+                <p>
+                  ${escapeHTML(d.description)}
+                </p>
 
 
-                  ${
-                    d.url
+                ${
+                  d.url
 
                     ?
 
-                    `
-
-                      <a
-                        class="document-link"
-                        href="${escapeHTML(d.url)}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-
-                        OPEN DOCUMENT ↗
-
-                      </a>
-
-                    `
+                    `<a
+                      class="btn"
+                      href="${escapeHTML(d.url)}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      OPEN DOCUMENT ↗
+                    </a>`
 
                     :
 
                     ""
+                }
 
-                  }
+              </article>
 
-
-                </article>
-
-              `
-            )
+            `)
             .join("")
 
           :
@@ -2342,20 +2263,399 @@
 
 
     /* ==================================================
-       EMPTY
+       NAVIGATION
        ================================================== */
 
-    function empty(
-      message
-    ) {
+    document
+      .querySelectorAll(".nav-button")
+      .forEach(button => {
 
-      return `
+        button.addEventListener(
+          "click",
+          () => {
 
-        <div class="empty">
+            document
+              .querySelectorAll(".nav-button")
+              .forEach(b =>
+                b.classList.remove("active")
+              );
 
-          ${escapeHTML(
-            message
-          )}
+
+            document
+              .querySelectorAll(".page")
+              .forEach(p =>
+                p.classList.remove("active")
+              );
+
+
+            button.classList.add("active");
+
+
+            document
+              .getElementById(
+                button.dataset.section
+              )
+              .classList.add("active");
+
+
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+
+          }
+        );
+
+      });
+
+
+    /* ==================================================
+       SEARCH
+       ================================================== */
+
+    document
+      .getElementById("scp-search")
+      .addEventListener(
+        "input",
+        e =>
+          renderSCPs(e.target.value)
+      );
+
+
+    document
+      .getElementById("test-search")
+      .addEventListener(
+        "input",
+        e =>
+          renderTests(e.target.value)
+      );
+
+
+    /* ==================================================
+       REPORT CLOSE
+       ================================================== */
+
+    document
+      .getElementById("report-close")
+      .addEventListener(
+        "click",
+        closeReport
+      );
+
+
+    document
+      .getElementById("report-overlay")
+      .addEventListener(
+        "click",
+        event => {
+
+          if (
+            event.target.id ===
+            "report-overlay"
+          ) {
+
+            closeReport();
+
+          }
+
+        }
+      );
+
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        if (event.key === "Escape") {
+          closeReport();
+        }
+
+      }
+    );
+
+
+    /* ==================================================
+       AUTH
+       ================================================== */
+
+    async function checkAdmin() {
+
+      const {
+        data
+      } =
+        await supabaseClient.auth.getUser();
+
+
+      const user =
+        data?.user;
+
+
+      if (
+        user &&
+        user.id === ADMIN_UID
+      ) {
+
+        document
+          .getElementById("admin-login")
+          .classList
+          .add("hidden");
+
+
+        document
+          .getElementById("admin-panel")
+          .classList
+          .remove("hidden");
+
+
+        renderAdmin();
+
+      }
+
+      else {
+
+        document
+          .getElementById("admin-login")
+          .classList
+          .remove("hidden");
+
+
+        document
+          .getElementById("admin-panel")
+          .classList
+          .add("hidden");
+
+      }
+
+    }
+
+
+    document
+      .getElementById("login-form")
+      .addEventListener(
+        "submit",
+        async event => {
+
+          event.preventDefault();
+
+
+          const email =
+            document
+              .getElementById("login-email")
+              .value;
+
+
+          const password =
+            document
+              .getElementById("login-password")
+              .value;
+
+
+          const result =
+            await supabaseClient.auth.signInWithPassword({
+              email,
+              password
+            });
+
+
+          const errorBox =
+            document
+              .getElementById("login-error");
+
+
+          if (result.error) {
+
+            errorBox.classList.remove(
+              "hidden"
+            );
+
+            errorBox.textContent =
+              result.error.message;
+
+            return;
+
+          }
+
+
+          errorBox.classList.add(
+            "hidden"
+          );
+
+
+          await checkAdmin();
+
+        }
+      );
+
+
+    async function logout() {
+
+      await supabaseClient.auth.signOut();
+
+      await checkAdmin();
+
+    }
+
+
+    supabaseClient.auth.onAuthStateChange(
+      async () => {
+
+        await checkAdmin();
+
+      }
+    );
+
+
+    /* ==================================================
+       ADMIN PANEL
+       ================================================== */
+
+    let adminTable =
+      "personnel";
+
+
+    function renderAdmin() {
+
+      const content =
+        document.getElementById(
+          "admin-content"
+        );
+
+
+      content.innerHTML = `
+
+        <div class="admin-actions">
+
+          <button
+            class="btn secondary"
+            onclick="adminTable='personnel';renderAdminTable()"
+          >
+            PERSONNEL
+          </button>
+
+          <button
+            class="btn secondary"
+            onclick="adminTable='scps';renderAdminTable()"
+          >
+            SCPS
+          </button>
+
+          <button
+            class="btn secondary"
+            onclick="adminTable='tests';renderAdminTable()"
+          >
+            TESTS
+          </button>
+
+          <button
+            class="btn secondary"
+            onclick="adminTable='incidents';renderAdminTable()"
+          >
+            INCIDENTS
+          </button>
+
+        </div>
+
+        <div id="admin-table-container"></div>
+
+      `;
+
+
+      renderAdminTable();
+
+    }
+
+
+    function renderAdminTable() {
+
+      const container =
+        document.getElementById(
+          "admin-table-container"
+        );
+
+
+      const rows =
+        state[adminTable];
+
+
+      if (!rows.length) {
+
+        container.innerHTML =
+          empty("No records found.");
+
+        return;
+
+      }
+
+
+      const keys =
+        Object.keys(rows[0])
+          .filter(key => key !== "id");
+
+
+      container.innerHTML = `
+
+        <div style="overflow-x:auto">
+
+          <table class="admin-table">
+
+            <thead>
+
+              <tr>
+
+                ${keys
+                  .map(
+                    key =>
+                      `<th>${escapeHTML(key)}</th>`
+                  )
+                  .join("")}
+
+                <th>ACTIONS</th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              ${rows
+                .map(row => `
+
+                  <tr>
+
+                    ${keys
+                      .map(
+                        key =>
+                          `<td>${escapeHTML(row[key])}</td>`
+                      )
+                      .join("")}
+
+                    <td>
+
+                      <button
+                        class="btn secondary"
+                        onclick="adminEdit('${adminTable}', ${row.id})"
+                      >
+                        EDIT
+                      </button>
+
+                      <button
+                        class="btn danger"
+                        onclick="adminDelete('${adminTable}', ${row.id})"
+                      >
+                        DELETE
+                      </button>
+
+                    </td>
+
+                  </tr>
+
+                `)
+                .join("")}
+
+            </tbody>
+
+          </table>
 
         </div>
 
@@ -2365,234 +2665,253 @@
 
 
     /* ==================================================
-       NAVIGATION
+       ADMIN EDIT
        ================================================== */
 
-    document
-      .querySelectorAll(
-        ".nav-button"
-      )
-      .forEach(
-        button => {
+    function adminNew(table) {
 
-          button.addEventListener(
-            "click",
-            () => {
+      const source =
+        state[table][0];
 
 
-              document
-                .querySelectorAll(
-                  ".nav-button"
-                )
-                .forEach(
-                  b =>
-                    b.classList
-                      .remove(
-                        "active"
-                      )
-                );
+      if (!source) {
 
+        alert(
+          "There are no existing records to determine the form structure."
+        );
 
-              document
-                .querySelectorAll(
-                  ".page"
-                )
-                .forEach(
-                  p =>
-                    p.classList
-                      .remove(
-                        "active"
-                      )
-                );
-
-
-              button.classList
-                .add("active");
-
-
-              document
-                .getElementById(
-                  button.dataset.section
-                )
-                .classList
-                .add("active");
-
-
-              window.scrollTo({
-
-                top: 0,
-
-                behavior: "smooth"
-
-              });
-
-
-            }
-          );
-
-        }
-      );
-
-
-    /* ==================================================
-       SEARCH
-       ================================================== */
-
-    document
-      .getElementById(
-        "scp-search"
-      )
-      .addEventListener(
-        "input",
-        e =>
-          renderSCPs(
-            e.target.value
-          )
-      );
-
-
-    document
-      .getElementById(
-        "test-search"
-      )
-      .addEventListener(
-        "input",
-        e =>
-          renderTests(
-            e.target.value
-          )
-      );
-
-
-    /* ==================================================
-       REPORT CLOSE
-       ================================================== */
-
-    document
-      .getElementById(
-        "report-close"
-      )
-      .addEventListener(
-        "click",
-        closeReport
-      );
-
-
-    /* ==================================================
-       ESC CLOSE
-       ================================================== */
-
-    document.addEventListener(
-      "keydown",
-      event => {
-
-        if (
-          event.key ===
-          "Escape"
-        ) {
-
-          closeReport();
-
-        }
+        return;
 
       }
-    );
+
+
+      adminForm(
+        table,
+        {}
+      );
+
+    }
+
+
+    function adminEdit(
+      table,
+      id
+    ) {
+
+      const row =
+        state[table]
+          .find(
+            item =>
+              Number(item.id) ===
+              Number(id)
+          );
+
+
+      if (!row) return;
+
+
+      adminForm(
+        table,
+        row
+      );
+
+    }
+
+
+    function adminForm(
+      table,
+      row
+    ) {
+
+      const source =
+        state[table][0] ||
+        row;
+
+
+      const keys =
+        Object.keys(source)
+          .filter(key => key !== "id");
+
+
+      const container =
+        document.getElementById(
+          "admin-content"
+        );
+
+
+      container.innerHTML = `
+
+        <div class="panel">
+
+          <h3>
+            ${row.id ? "EDIT" : "NEW"}
+            ${escapeHTML(table.toUpperCase())}
+          </h3>
+
+
+          <form
+            id="admin-record-form"
+          >
+
+            ${keys
+              .map(key => `
+
+                <div class="form-group">
+
+                  <label>
+                    ${escapeHTML(
+                      key.replaceAll("_", " ").toUpperCase()
+                    )}
+                  </label>
+
+                  <textarea
+                    name="${escapeHTML(key)}"
+                  >${escapeHTML(row[key] ?? "")}</textarea>
+
+                </div>
+
+              `)
+              .join("")}
+
+
+            <button
+              class="btn"
+              type="submit"
+            >
+              SAVE
+            </button>
+
+
+            <button
+              class="btn secondary"
+              type="button"
+              onclick="renderAdmin()"
+            >
+              CANCEL
+            </button>
+
+          </form>
+
+        </div>
+
+      `;
+
+
+      document
+        .getElementById(
+          "admin-record-form"
+        )
+        .addEventListener(
+          "submit",
+          async event => {
+
+            event.preventDefault();
+
+
+            const form =
+              new FormData(
+                event.target
+              );
+
+
+            const payload = {};
+
+
+            keys.forEach(key => {
+
+              payload[key] =
+                form.get(key);
+
+            });
+
+
+            let result;
+
+
+            if (row.id) {
+
+              result =
+                await supabaseClient
+                  .from(table)
+                  .update(payload)
+                  .eq("id", row.id);
+
+            }
+
+            else {
+
+              result =
+                await supabaseClient
+                  .from(table)
+                  .insert(payload);
+
+            }
+
+
+            if (result.error) {
+
+              alert(
+                "SAVE FAILED: " +
+                result.error.message
+              );
+
+              return;
+
+            }
+
+
+            await loadData();
+
+            renderAdmin();
+
+          }
+        );
+
+    }
 
 
     /* ==================================================
-       DARK / LIGHT MODE
+       ADMIN DELETE
        ================================================== */
 
-    function setTheme(
-      theme
+    async function adminDelete(
+      table,
+      id
     ) {
 
       if (
-        theme ===
-        "light"
+        !confirm(
+          "Are you sure you want to delete this record?"
+        )
       ) {
 
-        document.body
-          .classList
-          .add("light-mode");
-
-
-        localStorage.setItem(
-          "scd-theme",
-          "light"
-        );
+        return;
 
       }
 
-      else {
 
-        document.body
-          .classList
-          .remove("light-mode");
+      const result =
+        await supabaseClient
+          .from(table)
+          .delete()
+          .eq("id", id);
 
 
-        localStorage.setItem(
-          "scd-theme",
-          "dark"
+      if (result.error) {
+
+        alert(
+          "DELETE FAILED: " +
+          result.error.message
         );
+
+        return;
 
       }
 
-    }
 
+      await loadData();
 
-    document
-      .getElementById(
-        "dark-mode-button"
-      )
-      .addEventListener(
-        "click",
-        () =>
-          setTheme(
-            "dark"
-          )
-      );
-
-
-    document
-      .getElementById(
-        "light-mode-button"
-      )
-      .addEventListener(
-        "click",
-        () =>
-          setTheme(
-            "light"
-          )
-      );
-
-
-    /* ==================================================
-       LOAD SAVED THEME
-       ================================================== */
-
-    const savedTheme =
-      localStorage.getItem(
-        "scd-theme"
-      );
-
-
-    if (
-      savedTheme ===
-      "light"
-    ) {
-
-      setTheme(
-        "light"
-      );
-
-    }
-
-    else {
-
-      setTheme(
-        "dark"
-      );
+      renderAdminTable();
 
     }
 
@@ -2603,9 +2922,9 @@
 
     loadData();
 
+    checkAdmin();
+
   </script>
 
-
 </body>
-
 </html>
