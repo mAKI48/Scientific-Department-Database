@@ -1,18 +1,20 @@
 [
   {
     "id": "DOC-001",
-    "title": "Scientific Testing Guidelines",
-    "type": "GUIDELINE",
+    "title": "Scientific Department Handbook",
+    "type": "HANDBOOK",
     "clearance": 3,
     "updated": "2026-08-10",
-    "description": "General guidance for planning, conducting and documenting Scientific Department tests."
+    "description": "Official Scientific Department handbook.",
+    "url": "https://docs.google.com/document/d/1ckSTSkX8v1c3a2aWjS5P6WtbKE_-sZ3KYxmoTH9m-XA/edit?tab=t.0#heading=h.yaenv47wp396"
   },
   {
     "id": "DOC-002",
-    "title": "Test Report Format",
-    "type": "TEMPLATE",
-    "clearance": 2,
+    "title": "Scientific Grading Scales",
+    "type": "REFERENCE",
+    "clearance": 3,
     "updated": "2026-08-10",
-    "description": "Standard format for Scientific Department test reports submitted through Discord."
+    "description": "Scientific Department grading and classification scales.",
+    "url": "https://docs.google.com/document/d/1kddJJ9Vb2tMCeXnkcwLo1MEEZQHbjGhPp0TNqe5hujU/edit?tab=t.0#heading=h.ynnjn7hk0rln"
   }
 ]
