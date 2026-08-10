@@ -1,0 +1,11 @@
+[
+  {
+    "id": "RN-001",
+    "title": "SCP-096 Target Selection",
+    "date": "2026-08-10",
+    "author": "Lillkorveen",
+    "scp": "SCP-096",
+    "status": "OPEN",
+    "content": "Current test data suggests distance may affect the first target selected by SCP-096. More controlled testing is required before this can be considered a reliable behavior."
+  }
+]

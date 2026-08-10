@@ -1,0 +1,14 @@
+[
+  {
+    "id": "INC-014",
+    "title": "Testing Chamber Breach",
+    "date": "2026-08-10",
+    "location": "Lower Containment X",
+    "scp": "SCP-096",
+    "status": "CLOSED",
+    "summary": "An SCP-096 test resulted in a temporary loss of containment.",
+    "personnel": "Scientific Department and MTF response team",
+    "casualties": "10 Class-D",
+    "resolution": "SCP-096 was successfully recontained and the testing chamber was secured."
+  }
+]

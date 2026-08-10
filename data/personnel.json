@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Lillkorveen",
+    "rank": "Overseer",
+    "clearance": 5,
+    "department": "Scientific Department",
+    "tests_conducted": 532,
+    "status": "ACTIVE"
+  },
+  {
+    "name": "Lukkiryd",
+    "rank": "Scientist",
+    "clearance": 5,
+    "department": "Scientific Department",
+    "tests_conducted": 184,
+    "status": "ACTIVE"
+  }
+]

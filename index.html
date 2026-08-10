@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCD Scientific Database</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div>
+        <div class="department">SCIENTIFIC DEPARTMENT</div>
+        <h1>SCD RESEARCH DATABASE</h1>
+        <div class="classification">FOUNDATION INTERNAL USE ONLY</div>
+      </div>
+      <div class="status">SYSTEM STATUS: <span>ONLINE</span></div>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <button class="nav-button active" data-section="home">HOME</button>
+    <button class="nav-button" data-section="scps">SCP FILES</button>
+    <button class="nav-button" data-section="tests">TEST REPORTS</button>
+    <button class="nav-button" data-section="research">RESEARCH NOTES</button>
+    <button class="nav-button" data-section="incidents">INCIDENTS</button>
+    <button class="nav-button" data-section="personnel">PERSONNEL</button>
+    <button class="nav-button" data-section="documents">DOCUMENTS</button>
+  </nav>
+
+  <main class="container">
+    <section id="home" class="page active">
+      <div class="page-title">
+        <h2>DATABASE OVERVIEW</h2>
+        <p>Scientific Department research and testing archive.</p>
+      </div>
+
+      <div class="notice">
+        <strong>NOTICE:</strong> Information contained within this database may be restricted by clearance level.
+        Unauthorized distribution of Foundation research is prohibited.
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <div class="grid-two">
+        <div class="panel">
+          <div class="panel-title">RECENT TEST REPORTS</div>
+          <div id="recent-tests"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">RECENT RESEARCH NOTES</div>
+          <div id="recent-research"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">DATABASE INFORMATION</div>
+        <p>
+          This database contains records created by members of the Scientific Department.
+          Test reports, research notes, incident reports and personnel records are archived here
+          for internal reference.
+        </p>
+      </div>
+    </section>
+
+    <section id="scps" class="page">
+      <div class="page-title">
+        <h2>SCP FILES</h2>
+        <p>Known anomalies and associated research information.</p>
+      </div>
+      <div class="toolbar">
+        <input id="scp-search" type="search" placeholder="Search SCP number or name...">
+      </div>
+      <div id="scp-list" class="record-list"></div>
+    </section>
+
+    <section id="tests" class="page">
+      <div class="page-title">
+        <h2>TEST REPORTS</h2>
+        <p>Scientific Department experiment archive.</p>
+      </div>
+      <div class="toolbar">
+        <input id="test-search" type="search" placeholder="Search test number, SCP, scientist...">
+      </div>
+      <div id="test-list" class="record-list"></div>
+    </section>
+
+    <section id="research" class="page">
+      <div class="page-title">
+        <h2>RESEARCH NOTES</h2>
+        <p>Short observations, theories and follow-up research.</p>
+      </div>
+      <div id="research-list" class="record-list"></div>
+    </section>
+
+    <section id="incidents" class="page">
+      <div class="page-title">
+        <h2>INCIDENT REPORTS</h2>
+        <p>Archived containment and research incidents.</p>
+      </div>
+      <div id="incident-list" class="record-list"></div>
+    </section>
+
+    <section id="personnel" class="page">
+      <div class="page-title">
+        <h2>PERSONNEL</h2>
+        <p>Scientific Department personnel records.</p>
+      </div>
+      <div id="personnel-list" class="record-list"></div>
+    </section>
+
+    <section id="documents" class="page">
+      <div class="page-title">
+        <h2>DOCUMENTS</h2>
+        <p>General Scientific Department documentation.</p>
+      </div>
+      <div id="document-list" class="record-list"></div>
+    </section>
+
+    <div id="error" class="error hidden"></div>
+  </main>
+
+  <footer>
+    SCD SCIENTIFIC DATABASE &mdash; FOUNDATION INTERNAL ARCHIVE
+    <span id="updated"></span>
+  </footer>
+
+<script>
+const state = {
+  scps: [],
+  tests: [],
+  research: [],
+  incidents: [],
+  personnel: [],
+  documents: []
+};
+
+async function loadData() {
+  const files = Object.keys(state);
+
+  try {
+    await Promise.all(files.map(async (file) => {
+      const response = await fetch(`data/${file}.json`);
+      if (!response.ok) throw new Error(`Could not load data/${file}.json`);
+      state[file] = await response.json();
+    }));
+
+    renderAll();
+    document.getElementById("updated").textContent =
+      " | DATABASE LOADED: " + new Date().toLocaleDateString();
+  } catch (error) {
+    const box = document.getElementById("error");
+    box.classList.remove("hidden");
+    box.textContent =
+      "DATABASE ERROR: " + error.message +
+      " — If you opened index.html directly, use GitHub Pages or a local web server.";
+  }
+}
+
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function renderAll() {
+  renderStats();
+  renderRecent();
+  renderSCPs();
+  renderTests();
+  renderResearch();
+  renderIncidents();
+  renderPersonnel();
+  renderDocuments();
+}
+
+function renderStats() {
+  document.getElementById("stats").innerHTML = `
+    <div class="stat"><strong>${state.scps.length}</strong><span>SCP FILES</span></div>
+    <div class="stat"><strong>${state.tests.length}</strong><span>TEST REPORTS</span></div>
+    <div class="stat"><strong>${state.research.length}</strong><span>RESEARCH NOTES</span></div>
+    <div class="stat"><strong>${state.incidents.length}</strong><span>INCIDENTS</span></div>
+    <div class="stat"><strong>${state.personnel.length}</strong><span>PERSONNEL</span></div>
+  `;
+}
+
+function renderRecent() {
+  const tests = [...state.tests].slice(-3).reverse();
+  document.getElementById("recent-tests").innerHTML = tests.length
+    ? tests.map(testCompact).join("")
+    : empty("No test reports filed.");
+
+  const notes = [...state.research].slice(-3).reverse();
+  document.getElementById("recent-research").innerHTML = notes.length
+    ? notes.map(noteCompact).join("")
+    : empty("No research notes filed.");
+}
+
+function testCompact(t) {
+  return `
+    <div class="compact-record">
+      <b>${escapeHTML(t.test_number)}</b>
+      <span>${escapeHTML(t.scp)} — ${escapeHTML(t.scientist)}</span>
+      <small>${escapeHTML(t.date)} | ${escapeHTML(t.outcome)}</small>
+    </div>`;
+}
+
+function noteCompact(n) {
+  return `
+    <div class="compact-record">
+      <b>${escapeHTML(n.id)}</b>
+      <span>${escapeHTML(n.title)}</span>
+      <small>${escapeHTML(n.author)} | ${escapeHTML(n.date)}</small>
+    </div>`;
+}
+
+function renderSCPs(filter = "") {
+  const q = filter.toLowerCase();
+  const records = state.scps.filter(s =>
+    `${s.number} ${s.name} ${s.object_class}`.toLowerCase().includes(q)
+  );
+
+  document.getElementById("scp-list").innerHTML =
+    records.length ? records.map(scpCard).join("") : empty("No SCP files found.");
+}
+
+function scpCard(s) {
+  return `
+    <article class="record">
+      <div class="record-head">
+        <h3>${escapeHTML(s.number)} — ${escapeHTML(s.name)}</h3>
+        <span class="tag">${escapeHTML(s.object_class)}</span>
+      </div>
+      <div class="meta">
+        Risk: ${escapeHTML(s.risk_class)} | Zone: ${escapeHTML(s.containment_zone)}
+      </div>
+      <p>${escapeHTML(s.description)}</p>
+      <div class="record-foot">Clearance: Level ${escapeHTML(s.clearance)}</div>
+    </article>`;
+}
+
+function renderTests(filter = "") {
+  const q = filter.toLowerCase();
+  const records = state.tests.filter(t =>
+    `${t.test_number} ${t.scp} ${t.scientist} ${t.question} ${t.outcome}`
+      .toLowerCase().includes(q)
+  );
+
+  document.getElementById("test-list").innerHTML =
+    records.length ? records.map(testCard).join("") : empty("No test reports found.");
+}
+
+function testCard(t) {
+  return `
+    <article class="record">
+      <div class="record-head">
+        <h3>${escapeHTML(t.test_number)} — ${escapeHTML(t.scp)}</h3>
+        <span class="tag">${escapeHTML(t.outcome)}</span>
+      </div>
+      <div class="meta">
+        ${escapeHTML(t.date)} | Scientist: ${escapeHTML(t.scientist)} | Clearance: ${escapeHTML(t.clearance)}
+      </div>
+      <p><strong>Question:</strong> ${escapeHTML(t.question)}</p>
+      <p><strong>Hypothesis:</strong> ${escapeHTML(t.hypothesis)}</p>
+      <div class="log"><strong>TEST LOG</strong><br>${escapeHTML(t.log)}</div>
+      <p><strong>Results:</strong> ${escapeHTML(t.results)}</p>
+      <p><strong>Scientist Note:</strong> "${escapeHTML(t.scientist_note)}"</p>
+      <div class="record-foot">
+        Casualties: ${escapeHTML(t.casualties)} | Follow-up: ${escapeHTML(t.follow_up)}
+      </div>
+    </article>`;
+}
+
+function renderResearch() {
+  document.getElementById("research-list").innerHTML =
+    state.research.length ? state.research.slice().reverse().map(n => `
+      <article class="record">
+        <div class="record-head">
+          <h3>${escapeHTML(n.id)} — ${escapeHTML(n.title)}</h3>
+          <span class="tag">${escapeHTML(n.status)}</span>
+        </div>
+        <div class="meta">${escapeHTML(n.date)} | ${escapeHTML(n.author)} | SCP: ${escapeHTML(n.scp)}</div>
+        <p>${escapeHTML(n.content)}</p>
+      </article>
+    `).join("") : empty("No research notes found.");
+}
+
+function renderIncidents() {
+  document.getElementById("incident-list").innerHTML =
+    state.incidents.length ? state.incidents.slice().reverse().map(i => `
+      <article class="record">
+        <div class="record-head">
+          <h3>${escapeHTML(i.id)} — ${escapeHTML(i.title)}</h3>
+          <span class="tag">${escapeHTML(i.status)}</span>
+        </div>
+        <div class="meta">${escapeHTML(i.date)} | ${escapeHTML(i.location)} | SCP: ${escapeHTML(i.scp)}</div>
+        <p><strong>Summary:</strong> ${escapeHTML(i.summary)}</p>
+        <p><strong>Personnel:</strong> ${escapeHTML(i.personnel)}</p>
+        <p><strong>Casualties:</strong> ${escapeHTML(i.casualties)}</p>
+        <p><strong>Resolution:</strong> ${escapeHTML(i.resolution)}</p>
+      </article>
+    `).join("") : empty("No incident reports found.");
+}
+
+function renderPersonnel() {
+  document.getElementById("personnel-list").innerHTML =
+    state.personnel.length ? state.personnel.map(p => `
+      <article class="record personnel-record">
+        <div class="record-head">
+          <h3>${escapeHTML(p.name)}</h3>
+          <span class="tag">LEVEL ${escapeHTML(p.clearance)}</span>
+        </div>
+        <div class="meta">${escapeHTML(p.rank)} | ${escapeHTML(p.department)}</div>
+        <p>Tests conducted: ${escapeHTML(p.tests_conducted)}</p>
+        <p>Status: ${escapeHTML(p.status)}</p>
+      </article>
+    `).join("") : empty("No personnel records found.");
+}
+
+function renderDocuments() {
+  document.getElementById("document-list").innerHTML =
+    state.documents.length ? state.documents.map(d => `
+      <article class="record">
+        <div class="record-head">
+          <h3>${escapeHTML(d.id)} — ${escapeHTML(d.title)}</h3>
+          <span class="tag">${escapeHTML(d.type)}</span>
+        </div>
+        <div class="meta">Clearance: ${escapeHTML(d.clearance)} | Updated: ${escapeHTML(d.updated)}</div>
+        <p>${escapeHTML(d.description)}</p>
+      </article>
+    `).join("") : empty("No documents found.");
+}
+
+function empty(message) {
+  return `<div class="empty">${escapeHTML(message)}</div>`;
+}
+
+document.querySelectorAll(".nav-button").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".nav-button").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    button.classList.add("active");
+    document.getElementById(button.dataset.section).classList.add("active");
+    window.scrollTo({top: 0, behavior: "smooth"});
+  });
+});
+
+document.getElementById("scp-search").addEventListener("input", e => renderSCPs(e.target.value));
+document.getElementById("test-search").addEventListener("input", e => renderTests(e.target.value));
+
+loadData();
+</script>
+</body>
+</html>

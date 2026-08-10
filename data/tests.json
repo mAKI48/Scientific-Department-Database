@@ -1,0 +1,17 @@
+[
+  {
+    "test_number": "#0532",
+    "date": "2026-08-10",
+    "scientist": "Lillkorveen",
+    "clearance": 5,
+    "scp": "SCP-096",
+    "question": "If multiple people view SCP-096's face at once, who will it attack first?",
+    "hypothesis": "SCP-096 will attack the closest individual before targeting the others.",
+    "log": "Ten Class-D personnel were positioned around SCP-096 at different distances. All subjects were instructed to look toward SCP-096 at the same time. SCP-096 became distressed and entered an enraged state. It attacked the closest subject first before pursuing the remaining subjects. MTF was deployed and recontainment was completed.",
+    "outcome": "Successful",
+    "results": "Distance appeared to influence the initial target, but SCP-096 continued targeting the other subjects.",
+    "scientist_note": "Hypothesis confirmed. Further controlled-distance testing is recommended.",
+    "casualties": "10 Class-D",
+    "follow_up": "YES"
+  }
+]

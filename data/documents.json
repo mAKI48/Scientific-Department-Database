@@ -1,0 +1,18 @@
+[
+  {
+    "id": "DOC-001",
+    "title": "Scientific Testing Guidelines",
+    "type": "GUIDELINE",
+    "clearance": 3,
+    "updated": "2026-08-10",
+    "description": "General guidance for planning, conducting and documenting Scientific Department tests."
+  },
+  {
+    "id": "DOC-002",
+    "title": "Test Report Format",
+    "type": "TEMPLATE",
+    "clearance": 2,
+    "updated": "2026-08-10",
+    "description": "Standard format for Scientific Department test reports submitted through Discord."
+  }
+]

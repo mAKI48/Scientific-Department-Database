@@ -1,0 +1,20 @@
+[
+  {
+    "number": "SCP-096",
+    "name": "The Shy Guy",
+    "object_class": "Euclid",
+    "risk_class": "High",
+    "containment_zone": "Lower Containment X",
+    "clearance": 3,
+    "description": "A humanoid entity displaying extreme distress when its face is viewed. This record is used for Scientific Department testing."
+  },
+  {
+    "number": "SCP-173",
+    "name": "The Sculpture",
+    "object_class": "Euclid",
+    "risk_class": "High",
+    "containment_zone": "Lower Containment",
+    "clearance": 3,
+    "description": "A hostile anomalous object requiring continuous observation under standard containment procedures."
+  }
+]
