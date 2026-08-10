@@ -4,15 +4,63 @@
     "rank": "Overseer",
     "clearance": 5,
     "department": "Scientific Department",
-    "tests_conducted": 532,
-    "status": "ACTIVE"
+    "tests_conducted": 001,
+    "status": "Active"
+  },
+      {
+    "name": "ToZowoJaXD",
+    "rank": "Senior Scientist",
+    "clearance": 4,
+    "department": "Scientific Department",
+    "tests_conducted": 000,
+    "status": "Active"
+  },
+    {
+    "name": "twaumatizedd",
+    "rank": "Entrant",
+    "clearance": OMNI,
+    "department": "Scientific Department",
+    "tests_conducted": Unknown,
+    "status": "Active"
   },
   {
-    "name": "Lukkiryd",
-    "rank": "Scientist",
-    "clearance": 5,
+    "name": "Xatuiytf",
+    "rank": "Entrant",
+    "clearance": OMNI,
     "department": "Scientific Department",
-    "tests_conducted": 184,
-    "status": "ACTIVE"
-  }
+    "tests_conducted": Unknown,
+    "status": "Active"
+  },
+    {
+    "name": "Hero_AltH",
+    "rank": "Entrant",
+    "clearance": 4,
+    "department": "Scientific Department",
+    "tests_conducted": 000,
+    "status": "Active"
+  },
+    {
+    "name": "deadly_headhunter",
+    "rank": "Entrant",
+    "clearance": 4,
+    "department": "Scientific Department",
+    "tests_conducted": 000,
+    "status": "Active"
+  },
+    {
+    "name": "Hawktarek",
+    "rank": "Entrant",
+    "clearance": 2,
+    "department": "Scientific Department",
+    "tests_conducted": Unknown,
+    "status": "Active"
+  },
+    {
+    "name": "SoltaireSeth1",
+    "rank": "Entrant",
+    "clearance": OMNI,
+    "department": "Scientific Department",
+    "tests_conducted": Unknown,
+    "status": "On Leave"
+  },
 ]
